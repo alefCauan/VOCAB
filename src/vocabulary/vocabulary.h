@@ -1,7 +1,8 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef VOCABULARY_H
+#define VOCABULARY_H
 
 #include "../../../includes/utils.h"
+
 
 
 
