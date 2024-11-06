@@ -6,8 +6,8 @@
 
 typedef struct Info {
     /////////////////////
-    Binary_tree br_words;
-    char eng_word[25];
+    Binary_tree eng_words;
+    char br_word[25];
     /////////////////////
 }Info;
 
@@ -23,6 +23,12 @@ typedef struct Zwei_drei_tree{
     Zwei_drei_tree *right;
     //////////////////////
 }Zwei_drei_tree;
+
+typedef struct Unit {
+    int unit_number;                 
+    Zwei_drei_tree root; 
+    Unit *next;   
+} Unit;
 
 
 #endif
