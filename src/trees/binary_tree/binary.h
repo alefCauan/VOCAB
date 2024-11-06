@@ -4,7 +4,7 @@
 #include "../../../includes/utils.h"
 
 // struct da arvore BINARIA
-typedef struct binary_tree
+typedef struct Binary_tree
 {
     
 }Binary_tree;
