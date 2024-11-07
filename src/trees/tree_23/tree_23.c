@@ -16,7 +16,7 @@ Zwei_drei_tree *alloc_tree(Info info, Zwei_drei_tree *left, Zwei_drei_tree *mid,
 	return node;
 }
 
-int is_leaf(Zwei_drei_tree *root)
+bool is_leaf(Zwei_drei_tree *root)
 {
 	int leaf = false; // não é folha
 
@@ -25,6 +25,36 @@ int is_leaf(Zwei_drei_tree *root)
 
 	return leaf;
 }
+
+// Busca o menor valor à direita (sucessor)
+void lower_info_right(Zwei_drei_tree *node, Zwei_drei_tree **result_node, Zwei_drei_tree **parent_node) 
+{
+    // Vai até o extremo esquerdo da subárvore direita
+    *parent_node = node;
+
+    while (node->left != NULL) 
+	{
+        *parent_node = node;
+        node = node->left;
+    }
+
+    *result_node = node;
+}
+
+void lower_info_left(Zwei_drei_tree *node, Zwei_drei_tree **result_node, Zwei_drei_tree **parent_node) 
+{
+    // Vai até o extremo direito da subárvore esquerda
+    *parent_node = node;
+
+    while (node->right != NULL) 
+	{
+        *parent_node = node;
+        node = node->right;
+    }
+
+    *result_node = node;
+}
+
 
 void add_tree_23(Zwei_drei_tree **root, Info info, Zwei_drei_tree *b_node)
 {
@@ -139,16 +169,16 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 	return b_node;
 }
 
-int remover23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
+int remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
 {
-	int removeu = 0;
-	Zwei_drei_tree *no = NULL, *no1, *paiNo = NULL, *paiNo1 = NULL, **aux;
+	int remove = 0;
+	Zwei_drei_tree *no = NULL, *node1, *dad_node = NULL, *dad_node1 = NULL, **aux;
 	aux = (Zwei_drei_tree **)malloc(sizeof(Zwei_drei_tree *));
-	no1 = (Zwei_drei_tree *)malloc(sizeof(Zwei_drei_tree));
+	node1 = (Zwei_drei_tree *)malloc(sizeof(Zwei_drei_tree));
 
 	if (*root != NULL)
 	{
-		if (is_leaf(*root) == 1)
+		if (is_leaf(*root) == true)
 		{
 			if ((*root)->two_info)
 			{
@@ -156,89 +186,89 @@ int remover23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
 				{ // quando é folha, tem duas informações e o numero ta na segunda posição
 					// (*root)->info2 = 0;
 					(*root)->two_info = false;
-					removeu = 1;
+					remove = 1;
 				}
-				else if (info == (*root)->info1)
+				else if (strcmp(info.br_word, (*root)->info1.br_word) == 0)
 				{ // quando é folha, tem duas informações e o numero ta na primeira posição do nó
 					(*root)->info1 = (*root)->info2;
-					(*root)->info2 = 0;
-					(*root)->NInfos = 1;
-					removeu = 1;
+					// (*root)->info2 = 0; TODO:
+					(*root)->two_info = false;
+					remove = 1;
 				}
 			}
-			else if (info == (*root)->info1)
+			else if (strcmp(info.br_word, (*root)->info1.br_word) == 0)
 			{
 				if (*Dad == NULL)
 				{
 					free(*root);
 					*root = NULL;
-					removeu = 1;
+					remove = 1;
 				}
 				else if (*root == (*Dad)->left)
 				{
 					(*root)->info1 = (*Dad)->info1;
-					paiNo = *Dad;
-					menorInfoDir((*Dad)->mid, &no, &paiNo);
+					dad_node = *Dad;
+					lower_info_right((*Dad)->mid, &no, &dad_node);
 					(*Dad)->info1 = no->info1;
-					removeu = 1;
+					remove = 1;
 
-					if (no->NInfos == 2)
+					if (no->two_info)
 					{
 						no->info1 = no->info2;
-						no->info2 = 0;
-						no->NInfos = 1;
+						// no->info2 = 0; TODO: 
+						no->two_info = false;
 					}
 					else
 					{
-						if (paiNo->NInfos == 1)
+						if (dad_node->two_info == false)
 						{
 							(*root)->info2 = no->info1;
-							(*root)->NInfos = 2;
+							(*root)->two_info = true;
 							free(no);
 							*Dad = *root;
 						}
 						else
 						{
-							no->info1 = paiNo->info2;
-							paiNo1 = paiNo;
-							menorInfoDir(paiNo->right, &no1, &paiNo1);
-							paiNo->info2 = no1->info1;
+							no->info1 = dad_node->info2;
+							dad_node1 = dad_node;
+							lower_info_right(dad_node->right, &node1, &dad_node1);
+							dad_node->info2 = node1->info1;
 
-							if (no1->NInfos == 2)
+							if (node1->two_info)
 							{
-								no1->info1 = no1->info2;
-								no1->info2 = 0;
-								no1->NInfos = 1;
+								node1->info1 = node1->info2;
+								// node1->info2 = 0; TODO: 
+								node1->two_info = false;
 							}
 							else
 							{
-								no->info2 = paiNo->info2;
-								no->NInfos = 2;
-								paiNo->info2 = 0;
-								paiNo->NInfos = 1;
-								free(no1);
-								paiNo1->right = NULL;
+								no->info2 = dad_node->info2;
+								no->two_info = true;
+								// dad_node->info2 = 0; TODO:
+								dad_node->two_info = 1;
+								free(node1);
+								dad_node1->right = NULL;
 							}
 						}
 					}
 				}
 				else if (*root == (*Dad)->mid)
 				{
-					removeu = 1;
-					if ((*Dad)->NInfos == 1)
+					remove = 1;
+					if ((*Dad)->two_info == false)
 					{
-						if (((*Dad)->left)->NInfos == 2)
+						if (((*Dad)->left)->two_info)
 						{
 							(*root)->info1 = (*Dad)->info1;
 							(*Dad)->info1 = ((*Dad)->left)->info2;
-							((*Dad)->left)->info2 = 0;
-							((*Dad)->left)->NInfos = 1;
+							// ((*Dad)->left)->info2 = 0; TODO: 
+							((*Dad)->left)->two_info = false;
 						}
 						else
 						{
 							((*Dad)->left)->info2 = (*Dad)->info1;
 							free(*root);
-							((*Dad)->left)->NInfos = 2;
+							((*Dad)->left)->two_info = true;
 							*aux = (*Dad)->left;
 							free(*Dad);
 							*Dad = *aux;
@@ -247,22 +277,22 @@ int remover23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
 					else
 					{
 						(*root)->info1 = (*Dad)->info2;
-						paiNo = *Dad;
-						menorInfoDir((*Dad)->right, &no, &paiNo);
+						dad_node = *Dad;
+						lower_info_right((*Dad)->right, &no, &dad_node);
 						(*Dad)->info2 = no->info1;
 
-						if (no->NInfos == 2)
+						if (no->two_info)
 						{
 							no->info1 = no->info2;
-							no->info2 = 0;
-							no->NInfos = 1;
+							// no->info2 = 0; TODO
+							no->two_info = false;
 						}
 						else
 						{
-							(*root)->NInfos = 2;
+							(*root)->two_info = true;
 							(*root)->info2 = (*Dad)->info2;
-							(*Dad)->info2 = 0;
-							(*Dad)->NInfos = 1;
+							// (*Dad)->info2 = 0; TODO: 
+							(*Dad)->two_info = false;
 							free(no);
 							(*Dad)->right = NULL;
 						}
@@ -270,16 +300,16 @@ int remover23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
 				}
 				else
 				{
-					removeu = 1;
-					paiNo = *Dad;
-					maiorInfoEsq((*Dad)->mid, &no, &paiNo);
+					remove = 1;
+					dad_node = *Dad;
+					lower_info_left((*Dad)->mid, &no, &dad_node);
 
-					if (no->NInfos == 1)
+					if (no->two_info == false)
 					{
 						no->info2 = (*Dad)->info2;
-						(*Dad)->info2 = 0;
-						(*Dad)->NInfos = 1;
-						no->NInfos = 2;
+						// (*Dad)->info2 = 0;TODO: 
+						(*Dad)->two_info = false;
+						no->two_info = true;
 						free(*root);
 						*root = NULL;
 					}
@@ -287,41 +317,41 @@ int remover23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
 					{
 						(*root)->info1 = (*Dad)->info2;
 						(*Dad)->info2 = no->info2;
-						no->info2 = 0;
-						no->NInfos = 1;
+						// no->info2 = 0; TODO
+						no->two_info = false;
 					}
 				}
 			}
 		}
 		else
 		{ // se nao é folha
-			if (info < (*root)->info1)
-				removeu = remover23(root, &(*root)->left, info);
-			else if (info == (*root)->info1)
+			if (strcmp(info.br_word, (*root)->info1.br_word) < 0)
+				remove = remove_23(root, &(*root)->left, info);
+			else if (strcmp(info.br_word, (*root)->info1.br_word) == 0)
 			{
-				paiNo = *root;
-				menorInfoDir((*root)->mid, &no, &paiNo);
+				dad_node = *root;
+				lower_info_right((*root)->mid, &no, &dad_node);
 				(*root)->info1 = no->info1;
-				remover23(root, &(*root)->mid, (*root)->info1);
-				removeu = 1;
+				remove_23(root, &(*root)->mid, (*root)->info1);
+				remove = 1;
 			}
-			else if (((*root)->NInfos == 1) || (info < (*root)->info2))
+			else if (((*root)->two_info == false) || (strcmp(info.br_word, (*root)->info2.br_word) < 0))
 			{
-				removeu = remover23(root, &(*root)->mid, info);
+				remove = remove_23(root, &(*root)->mid, info);
 			}
-			else if (info == (*root)->info2)
+			else if (strcmp(info.br_word, (*root)->info2.br_word) == 0)
 			{
-				paiNo = *Dad;
-				menorInfoDir((*Dad)->right, &no, &paiNo);
+				dad_node = *Dad;
+				lower_info_right((*Dad)->right, &no, &dad_node);
 				(*root)->info2 = no->info1;
-				remover23(root, &(*root)->right, (*root)->info2);
-				removeu = 1;
+				remove_23(root, &(*root)->right, (*root)->info2);
+				remove = 1;
 			}
 			else
 			{
-				removeu = remover23(root, &(*root)->right, info);
+				remove = remove_23(root, &(*root)->right, info);
 			}
 		}
 	}
-	return removeu;
+	return remove;
 }
