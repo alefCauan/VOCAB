@@ -10,21 +10,44 @@ FILE *_open_file(const char *file_name, const char *type)
     return file;
 }
 
-void scan_file_line()
+void scan_file_line() 
 {
-    FILE *parser = _open_file("/home/alef/programas/VOCAB/src/parser/vocabulary.txt", "r");
+    FILE *parser = _open_file(PARSER_PATH, "r");
+
     char line[1024];
-    
+
     while (fgets(line, sizeof(line), parser)) 
     {
-        // Imprime a linha lida (ou processa conforme necessário)
-        printf("%s", line);
-        
-        // Aqui você pode salvar, processar ou manipular a linha conforme necessário
-        // Por exemplo, você pode analisar e armazenar as palavras da linha
+        line[strcspn(line, "\n")] = '\0';
+
+        if (line[0] == UNIT_TOKEN) 
+        {
+            printf("----------------------------------------------------\n");
+            printf("Nova unidade: %s\n", line);
+            printf("----------------------------------------------------\n");
+        }
+        else 
+        {
+            char *english_word = strtok(line, ENG_TOKEN);
+            char *translations = strtok(NULL, END_TOKEN);
+
+            if (english_word != NULL && translations != NULL) 
+            {
+                printf("Palavra em inglês: %s\n", english_word);
+                
+                char *translation = strtok(translations, BR_TOKEN);
+                while (translation != NULL) 
+                {
+                    printf("Tradução: %s\n", translation);
+                    translation = strtok(NULL, BR_TOKEN);
+                }
+            }
+        }
     }
-    
+
+    fclose(parser);
 }
+
 
 void printf_file_line()
 {

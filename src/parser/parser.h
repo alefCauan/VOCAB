@@ -9,9 +9,10 @@
 #include "../utils/aux.h"
 
 #define UNIT_TOKEN '%'
-#define ENG_TOKEN  ':'
-#define BR_TOKEN   ','
-#define END_TOKEN  ';'
+#define ENG_TOKEN  ":"
+#define BR_TOKEN   ","
+#define END_TOKEN  ";"
+#define PARSER_PATH "/home/alef/programas/VOCAB/src/parser/vocabulary.txt"
 
 FILE *_open_file(const char *file_name, const char *type);
 
