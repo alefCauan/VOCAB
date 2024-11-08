@@ -1,10 +1,10 @@
 #include "tree_23.h"
 
-Zwei_drei_tree *alloc_tree(Info info, Zwei_drei_tree *left, Zwei_drei_tree *mid, Zwei_drei_tree *right)
+Two_three_tree *alloc_tree(Info info, Two_three_tree *left, Two_three_tree *mid, Two_three_tree *right)
 {
-	Zwei_drei_tree *node;
+	Two_three_tree *node;
 
-	node = (Zwei_drei_tree *)malloc(sizeof(Zwei_drei_tree));
+	node = (Two_three_tree *)malloc(sizeof(Two_three_tree));
 
 	(*node).info1 = info;
 	
@@ -16,7 +16,7 @@ Zwei_drei_tree *alloc_tree(Info info, Zwei_drei_tree *left, Zwei_drei_tree *mid,
 	return node;
 }
 
-bool is_leaf(Zwei_drei_tree *root)
+bool is_leaf(Two_three_tree *root)
 {
 	bool leaf = false; // não é folha
 
@@ -27,7 +27,7 @@ bool is_leaf(Zwei_drei_tree *root)
 }
 
 // Busca o menor valor à direita (sucessor)
-void lower_info_right(Zwei_drei_tree *node, Zwei_drei_tree **result_node, Zwei_drei_tree **parent_node) 
+void lower_info_right(Two_three_tree *node, Two_three_tree **result_node, Two_three_tree **parent_node) 
 {
     // Vai até o extremo esquerdo da subárvore direita
     *parent_node = node;
@@ -41,7 +41,7 @@ void lower_info_right(Zwei_drei_tree *node, Zwei_drei_tree **result_node, Zwei_d
     *result_node = node;
 }
 
-void lower_info_left(Zwei_drei_tree *node, Zwei_drei_tree **result_node, Zwei_drei_tree **parent_node) 
+void lower_info_left(Two_three_tree *node, Two_three_tree **result_node, Two_three_tree **parent_node) 
 {
     // Vai até o extremo direito da subárvore esquerda
     *parent_node = node;
@@ -55,7 +55,7 @@ void lower_info_left(Zwei_drei_tree *node, Zwei_drei_tree **result_node, Zwei_dr
     *result_node = node;
 }
 
-void add_tree_23(Zwei_drei_tree **root, Info info, Zwei_drei_tree *b_node)
+void add_tree_23(Two_three_tree **root, Info info, Two_three_tree *b_node)
 {
 	if (strcmp(info.br_word, (*root)->info1.br_word) > 0)
 	{
@@ -73,9 +73,9 @@ void add_tree_23(Zwei_drei_tree **root, Info info, Zwei_drei_tree *b_node)
 	(*root)->two_info = true;
 }
 
-Zwei_drei_tree *break_node(Zwei_drei_tree **root, Info info, Info *rise, Zwei_drei_tree *b_node) 
+Two_three_tree *break_node(Two_three_tree **root, Info info, Info *rise, Two_three_tree *b_node) 
 {
-    Zwei_drei_tree *new_node;
+    Two_three_tree *new_node;
 
     if (strcmp(info.br_word, (*root)->info1.br_word) < 0) 
 	{
@@ -104,9 +104,9 @@ Zwei_drei_tree *break_node(Zwei_drei_tree **root, Info info, Info *rise, Zwei_dr
     return new_node;
 }
 
-Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info info, Info *rise)
+Two_three_tree *insert_tree_23(Two_three_tree *Dad, Two_three_tree **root, Info info, Info *rise)
 {
-	Zwei_drei_tree *b_node;
+	Two_three_tree *b_node;
 	b_node = NULL;
     
 	if (*root == NULL)
@@ -119,11 +119,11 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 				add_tree_23(root, info, b_node);
 			else // quando não tem espaço
 			{
-				Zwei_drei_tree *novo;
+				Two_three_tree *novo;
 				novo = break_node(root, info, rise, b_node);
 				if (Dad == NULL)
 				{
-					Zwei_drei_tree *no;
+					Two_three_tree *no;
 					no = alloc_tree(*rise, *root, novo, NULL);
 					*root = no;
 				}
@@ -150,11 +150,11 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 				else // quando não tem espaço
 				{
 					Info rise1;
-					Zwei_drei_tree *novo;
+					Two_three_tree *novo;
 					novo = break_node(root, *rise, &rise1, b_node);
 					if (Dad == NULL)
 					{
-						Zwei_drei_tree *no;
+						Two_three_tree *no;
 						no = alloc_tree(rise1, *root, novo, NULL);
 						*root = no;
 						b_node = NULL;
@@ -171,12 +171,12 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 	return b_node;
 }
 
-int remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
+int remove_23(Two_three_tree **Dad, Two_three_tree **root, Info info)
 {
 	int remove = 0;
-	Zwei_drei_tree *no = NULL, *node1, *dad_node = NULL, *dad_node1 = NULL, **aux;
-	aux = (Zwei_drei_tree **)malloc(sizeof(Zwei_drei_tree *));
-	node1 = (Zwei_drei_tree *)malloc(sizeof(Zwei_drei_tree));
+	Two_three_tree *no = NULL, *node1, *dad_node = NULL, *dad_node1 = NULL, **aux;
+	aux = (Two_three_tree **)malloc(sizeof(Two_three_tree *));
+	node1 = (Two_three_tree *)malloc(sizeof(Two_three_tree));
 
 	if (*root != NULL)
 	{
@@ -359,7 +359,7 @@ int remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
 
 
 // Função para imprimir a árvore (apenas para verificação)
-void print_tree(Zwei_drei_tree *root, int level) 
+void print_tree(Two_three_tree *root, int level) 
 {
     if (root == NULL) return;
 

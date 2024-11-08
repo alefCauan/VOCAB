@@ -17,37 +17,37 @@ typedef struct Info {
 }Info;
 
 // struct da arvore 2-3
-typedef struct Zwei_drei_tree{
+typedef struct Two_three_tree{
     //////////////////////
     Info info1;
     Info info2;
     bool two_info;
     //////////////////////
-    struct Zwei_drei_tree *left;
-    struct Zwei_drei_tree *mid;
-    struct Zwei_drei_tree *right;
+    struct Two_three_tree *left;
+    struct Two_three_tree *mid;
+    struct Two_three_tree *right;
     //////////////////////
-}Zwei_drei_tree;
+}Two_three_tree;
 
-Zwei_drei_tree *alloc_tree(Info info, Zwei_drei_tree *left, Zwei_drei_tree *mid, Zwei_drei_tree *right);
+Two_three_tree *alloc_tree(Info info, Two_three_tree *left, Two_three_tree *mid, Two_three_tree *right);
 
-bool is_leaf(Zwei_drei_tree *root);
+bool is_leaf(Two_three_tree *root);
 
 // Busca o menor valor à direita (sucessor)
-void lower_info_right(Zwei_drei_tree *node, Zwei_drei_tree **result_node, Zwei_drei_tree **parent_node);
+void lower_info_right(Two_three_tree *node, Two_three_tree **result_node, Two_three_tree **parent_node);
 
 // Busca o maior valor à esquerda (predecessor)
-void lower_info_left(Zwei_drei_tree *node, Zwei_drei_tree **result_node, Zwei_drei_tree **parent_node);
+void lower_info_left(Two_three_tree *node, Two_three_tree **result_node, Two_three_tree **parent_node);
 
-void add_tree_23(Zwei_drei_tree **root, Info info, Zwei_drei_tree *b_node);
+void add_tree_23(Two_three_tree **root, Info info, Two_three_tree *b_node);
 
-Zwei_drei_tree *break_node(Zwei_drei_tree **root, Info info, Info *rise, Zwei_drei_tree *b_node);
+Two_three_tree *break_node(Two_three_tree **root, Info info, Info *rise, Two_three_tree *b_node);
 
-Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info info, Info *rise);
+Two_three_tree *insert_tree_23(Two_three_tree *Dad, Two_three_tree **root, Info info, Info *rise);
 
-int remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info);
+int remove_23(Two_three_tree **Dad, Two_three_tree **root, Info info);
 
-void print_tree(Zwei_drei_tree *root, int level); 
+void print_tree(Two_three_tree *root, int level); 
 
 
 // Além disso, permita ao usuário:
