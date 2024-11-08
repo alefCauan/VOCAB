@@ -5,8 +5,8 @@
 int main()
 {
     int result = 0;
-    char palavra1[] = {"alaf cauam"};
-    char palavra2[] = {"alcf cauam"};
+    char palavra1[] = {"czrr0"};
+    char palavra2[] = {"casa"};
 
     result = strcmp(palavra1, palavra2);
     

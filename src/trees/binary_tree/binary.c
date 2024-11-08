@@ -42,10 +42,10 @@ bool insert_bin(Binary_tree **root, Binary_tree *new)
 
 void register_bin(Binary_tree **root, Info_bin info)
 {
-    Binary_tree *new = allocate_enrollment();
+    Binary_tree *new = allocate_binary();
     new->info = info;
 
-    if (!insert_enrol(root, new))
+    if (!insert_bin(root, new))
     {
         // TODO: ERROR
         // RAISE_ERROR("insert enrol, code already inserted");  

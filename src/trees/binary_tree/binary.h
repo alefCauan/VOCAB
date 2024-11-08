@@ -1,7 +1,12 @@
 #ifndef BINARY_H
 #define BINARY_H
 
-#include "../../../includes/utils.h"
+// #include "../../../includes/utils.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
 
 // struct da arvore BINARIA
 typedef struct Info_bin{

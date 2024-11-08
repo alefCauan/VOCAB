@@ -1,7 +1,11 @@
 #ifndef TREE_23_H
 #define TREE_23_H
 
-#include "../../../includes/utils.h"
+// #include "../../../includes/utils.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 #include "../binary_tree/binary.h"
 
 typedef struct Info {
@@ -42,6 +46,8 @@ Zwei_drei_tree *break_node(Zwei_drei_tree **root, Info info, Info *rise, Zwei_dr
 Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info info, Info *rise);
 
 int remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info);
+
+void print_tree(Zwei_drei_tree *root, int level); 
 
 
 #endif

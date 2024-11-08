@@ -18,7 +18,7 @@ Zwei_drei_tree *alloc_tree(Info info, Zwei_drei_tree *left, Zwei_drei_tree *mid,
 
 bool is_leaf(Zwei_drei_tree *root)
 {
-	int leaf = false; // não é folha
+	bool leaf = false; // não é folha
 
 	if (root->left == NULL && root->mid == NULL && root->right == NULL)
 		leaf = true;
@@ -55,7 +55,6 @@ void lower_info_left(Zwei_drei_tree *node, Zwei_drei_tree **result_node, Zwei_dr
     *result_node = node;
 }
 
-
 void add_tree_23(Zwei_drei_tree **root, Info info, Zwei_drei_tree *b_node)
 {
 	if (strcmp(info.br_word, (*root)->info1.br_word) > 0)
@@ -74,32 +73,35 @@ void add_tree_23(Zwei_drei_tree **root, Info info, Zwei_drei_tree *b_node)
 	(*root)->two_info = true;
 }
 
-Zwei_drei_tree *break_node(Zwei_drei_tree **root, Info info, Info *rise, Zwei_drei_tree *b_node)
+Zwei_drei_tree *break_node(Zwei_drei_tree **root, Info info, Info *rise, Zwei_drei_tree *b_node) 
 {
-	Zwei_drei_tree *new;
+    Zwei_drei_tree *new_node;
 
-	if (strcmp(info.br_word, (*root)->info1.br_word) < 0) // TODO: verificar
+    if (strcmp(info.br_word, (*root)->info1.br_word) < 0) 
 	{
-		*rise = (*root)->info1;
-		new = alloc_tree((*root)->info2, (*root)->mid, (*root)->right, NULL);
-		(*root)->info1 = info;
-		(*root)->mid = b_node;
-	}
-	if (strcmp(info.br_word, (*root)->info1.br_word) > 0) // TODO: verificar
+        // Novo valor é o menor, `info1` deve subir, `info2` vai para o novo nó
+        *rise = (*root)->info1;
+        new_node = alloc_tree((*root)->info2, (*root)->mid, (*root)->right, NULL);
+        (*root)->info1 = info;
+        (*root)->mid = b_node;
+    } 
+    else if (strcmp(info.br_word, (*root)->info2.br_word) < 0) 
 	{
-		*rise = info;
-		new = alloc_tree((*root)->info2, b_node, (*root)->right, NULL);
-	}
-	else
+        // Novo valor está no meio, `info` deve subir
+        *rise = info;
+        new_node = alloc_tree((*root)->info2, b_node, (*root)->right, NULL);
+    } 
+    else 
 	{
-		*rise = (*root)->info2;
-		new = alloc_tree(info, (*root)->right, b_node, NULL);
-	}
-	// (*root)->info2 = 0; TODO:  eliminar info2
-	(*root)->two_info = false;
-	(*root)->right = NULL;
+        // Novo valor é o maior, `info2` deve subir, `info` vai para o novo nó
+        *rise = (*root)->info2;
+        new_node = alloc_tree(info, (*root)->right, b_node, NULL);
+    }
 
-	return (new);
+    (*root)->two_info = false;
+    (*root)->right = NULL;
+
+    return new_node;
 }
 
 Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info info, Info *rise)
@@ -189,7 +191,7 @@ int remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
 					remove = 1;
 				}
 				else if (strcmp(info.br_word, (*root)->info1.br_word) == 0)
-				{ // quando é folha, tem duas informações e o numero ta na primeira posição do nó
+		{ // quando é folha, tem duas informações e o numero ta na primeira posição do nó
 					(*root)->info1 = (*root)->info2;
 					// (*root)->info2 = 0; TODO:
 					(*root)->two_info = false;
@@ -348,10 +350,28 @@ int remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
 				remove = 1;
 			}
 			else
-			{
 				remove = remove_23(root, &(*root)->right, info);
-			}
 		}
 	}
+
 	return remove;
 }
+
+
+// Função para imprimir a árvore (apenas para verificação)
+void print_tree(Zwei_drei_tree *root, int level) 
+{
+    if (root == NULL) return;
+
+    for (int i = 0; i < level; i++) printf("  ");
+    printf("- %s", root->info1.br_word);
+    if (root->two_info) printf(", %s", root->info2.br_word);
+    printf("\n");
+
+    if (root->left) print_tree(root->left, level + 1);
+    if (root->mid) print_tree(root->mid, level + 1);
+    if (root->right) print_tree(root->right, level + 1);
+}
+
+
+
