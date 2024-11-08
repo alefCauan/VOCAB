@@ -1,0 +1,83 @@
+% Unidade 1
+    Bus: ônibus, barramento, transporte coletivo;
+    Bug: inseto, problema;
+    Bike: bicicleta;
+    Coller: ventilador;
+    Network: rede de computadores, malha;
+    System: sistema, método;
+    Memory: memória, lembrança;
+    Computer: computador, calculador;
+    Node: nó, ponto;
+    Device: dispositivo, aparelho;
+
+% Unidade 2
+    Bug: inseto, defeito;
+    Bicycle: bicicleta, ciclo;
+    Fan: ventilador, admirador;
+    Network: rede de relacionamento, conexão;
+    Driver: motorista, condutor;
+    Access: acesso, entrada;
+    Keyboard: teclado;
+    Mouse: rato, dispositivo de entrada;
+    Router: roteador, direcionador;
+    Switch: comutador, interruptor;
+
+% Unidade 3
+    Screen: tela, visor;
+    Database: banco de dados;
+    File: arquivo, pasta;
+    Code: código, cifra;
+    Signal: sinal, indicação;
+    Circuit: circuito, percurso;
+    Battery: bateria, pilha;
+    Operation: operação, funcionamento;
+    Port: porta, entrada;
+    Protocol: protocolo, norma;
+
+% Unidade 4
+    Interface: interface, interação;
+    Processor: processador, unidade de processamento;
+    Memory: memória, recordação;
+    Monitor: monitor, tela;
+    Algorithm: algoritmo, método;
+    Module: módulo, componente;
+    Application: aplicativo, aplicação;
+    Function: função, papel;
+    Path: caminho, trajeto;
+    Gateway: portal, porta de entrada;
+
+% Unidade 5
+    Download: baixar, transferir;
+    Upload: enviar, transferência;
+    Encryption: encriptação, codificação;
+    Security: segurança, proteção;
+    Password: senha, código de acesso;
+    User: usuário, cliente;
+    Admin: administrador, gestor;
+    Session: sessão, período;
+    Timeout: tempo limite, expiração;
+    Token: símbolo, marcador;
+
+% Unidade 6
+    Browser: navegador, explorador;
+    Cache: cache, memória rápida;
+    Cookie: cookie, biscoito;
+    Search: busca, pesquisa;
+    Engine: motor, mecanismo;
+    Protocol: protocolo, padrão;
+    URL: URL, endereço;
+    Data: dados, informação;
+    Server: servidor, provedor;
+    Client: cliente, usuário;
+
+% Unidade 7
+    Script: script, roteiro;
+    Shell: shell, concha;
+    Terminal: terminal, fim;
+    Console: console, painel;
+    Kernel: kernel, núcleo;
+    Framework: estrutura, base;
+    Library: biblioteca, acervo;
+    Package: pacote, conjunto;
+    Class: classe, categoria;
+    Instance: instância, exemplo;

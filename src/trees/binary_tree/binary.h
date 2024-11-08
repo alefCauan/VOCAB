@@ -10,13 +10,18 @@
 
 // struct da arvore BINARIA
 typedef struct Info_bin{
+    ///////////////////
     char eng_word[25];
+    //////////////////
 }Info_bin;
 
 typedef struct Binary_tree{
+    ////////////////////////////
     Info_bin info;
+    ////////////////////////////
     struct Binary_tree *left;
     struct Binary_tree *right;
+    ////////////////////////////
 }Binary_tree;
 
 Binary_tree *allocate_binary();
