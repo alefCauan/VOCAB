@@ -2,7 +2,7 @@
 
 int main() 
 {
-    Zwei_drei_tree *root = NULL;
+    Two_three_tree *root = NULL;
     Info info1, info2, info3, info4, info5;
     Info rise1;  // Variável auxiliar para crescimento da árvore
     Info rise2;  // Variável auxiliar para crescimento da árvore

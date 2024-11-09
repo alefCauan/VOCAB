@@ -50,12 +50,17 @@ int remove_23(Two_three_tree **Dad, Two_three_tree **root, Info info);
 void print_tree(Two_three_tree *root, int level); 
 
 
+
 // Além disso, permita ao usuário:
 // (i) informar uma unidade e então imprima todas as palavras da unidade em português seguida das
 // equivalentes em inglês;
+// Função para imprimir todas as palavras de uma unidade em português e suas equivalentes em inglês
+void print_words_by_unit(Two_three_tree *root, int unit);
 
 // (ii)informar uma palavra em português e então imprima todas as palavras em inglês equivalente a palavra em
 // português dada, independente da unidade;
+// Função para buscar uma palavra em português e imprimir suas equivalentes em inglês
+void search_portuguese_word(Two_three_tree *root, char *br_word);
 
 // (iii)informar uma palavra em inglês e e a unidade a qual a mesma pertence remove-la das árvores binárias
 // das quais ela pertence. Caso ela seja a única palavra em uma das árvores binárias, remover também da

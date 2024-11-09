@@ -358,6 +358,48 @@ int remove_23(Two_three_tree **Dad, Two_three_tree **root, Info info)
 }
 
 
+// Função para imprimir todas as palavras de uma unidade em português e suas equivalentes em inglês
+void print_words_by_unit(Two_three_tree *root, int unit) {
+    if (root != NULL) {
+        // Verificar se o info1 pertence à unidade
+        if (root->info1.unit == unit) {
+            printf("Palavra em português: %s\n", root->info1.br_word);
+            print_binary_tree(root->info1.eng_words); // Função para imprimir palavras em inglês
+        }
+        // Verificar se o info2 pertence à unidade, se presente
+        if (root->two_info && root->info2.unit == unit) {
+            printf("Palavra em português: %s\n", root->info2.br_word);
+            print_binary_tree(root->info2.eng_words);
+        }
+        // Recursão para os filhos
+        print_words_by_unit(root->left, unit);
+        print_words_by_unit(root->mid, unit);
+        if (root->two_info)
+            print_words_by_unit(root->right, unit);
+    }
+}
+
+// Função para buscar uma palavra em português e imprimir suas equivalentes em inglês
+void search_portuguese_word(Two_three_tree *root, char *br_word) {
+    if (root != NULL) {
+        // Verifica info1 e info2 para a palavra em português
+        if (strcmp(root->info1.br_word, br_word) == 0) {
+            printf("Equivalentes em inglês para %s:\n", br_word);
+            print_binary_tree(root->info1.eng_words);
+        }
+        if (root->two_info && strcmp(root->info2.br_word, br_word) == 0) {
+            printf("Equivalentes em inglês para %s:\n", br_word);
+            print_binary_tree(root->info2.eng_words);
+        }
+        // Recursão para os filhos
+        search_portuguese_word(root->left, br_word);
+        search_portuguese_word(root->mid, br_word);
+        if (root->two_info)
+            search_portuguese_word(root->right, br_word);
+    }
+}
+
+
 // Função para imprimir a árvore (apenas para verificação)
 void print_tree(Two_three_tree *root, int level) 
 {
