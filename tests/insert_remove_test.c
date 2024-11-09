@@ -4,11 +4,8 @@ int main()
 {
     Zwei_drei_tree *root = NULL;
     Info info1, info2, info3, info4, info5;
-    Info rise1;  // Variável auxiliar para crescimento da árvore
-    Info rise2;  // Variável auxiliar para crescimento da árvore
-    Info rise3;  // Variável auxiliar para crescimento da árvore
-    Info rise4;  // Variável auxiliar para crescimento da árvore
-    Info rise5;  // Variável auxiliar para crescimento da árvore
+    Info rise;  // Variável auxiliar para crescimento da árvore
+ 
 
 
     // Inicializa dados para teste
@@ -18,20 +15,28 @@ int main()
     strcpy(info4.br_word, "dado");
     strcpy(info5.br_word, "ave");
 
-    printf("%s - %s = %d\n", info1.br_word, info2.br_word, strcmp(info1.br_word, info2.br_word));
+    // printf("%s - %s = %d\n", info1.br_word, info2.br_word, strcmp(info1.br_word, info2.br_word));
+    // const char *search_word = "casa";
 
 
     // Insere nós na árvore
     printf("Inserindo palavras na árvore...\n");
-    insert_tree_23(NULL, &root, info1, &rise1);
+    insert_tree_23(NULL, &root, info1, &rise);
     print_tree(root, 0);
-    insert_tree_23(NULL, &root, info2, &rise2);
+    insert_tree_23(NULL, &root, info2, &rise);
     print_tree(root, 0);
-    insert_tree_23(NULL, &root, info3, &rise3);
+    insert_tree_23(NULL, &root, info3, &rise);
     print_tree(root, 0);
-    insert_tree_23(NULL, &root, info4, &rise4);
+    insert_tree_23(NULL, &root, info4, &rise);
     print_tree(root, 0);
-    insert_tree_23(NULL, &root, info5, &rise5);
+    insert_tree_23(NULL, &root, info5, &rise);
+
+    // Zwei_drei_tree *result = search_23_tree(root, search_word);
+    // if (result != NULL) {
+    //     printf("Palavra encontrada: %s\n", search_word);
+    // } else {
+    //     printf("Palavra '%s' não encontrada na árvore.\n", search_word);
+    // }
 
     // Imprime estrutura da árvore após inserções
     printf("\nÁrvore após inserções:\n");

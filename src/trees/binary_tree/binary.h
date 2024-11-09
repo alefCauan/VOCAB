@@ -12,6 +12,7 @@
 typedef struct Info_bin{
     ///////////////////
     char eng_word[25];
+    int unit;
     //////////////////
 }Info_bin;
 
@@ -24,7 +25,7 @@ typedef struct Binary_tree{
     ////////////////////////////
 }Binary_tree;
 
-Binary_tree *allocate_binary();
+Binary_tree *allocate_binary(Info_bin info);
 
 Binary_tree *search_bin(Binary_tree *root, Info_bin info);
 
@@ -32,5 +33,6 @@ bool insert_bin(Binary_tree **root, Binary_tree *new);
 
 void register_bin(Binary_tree **root, Info_bin info);
 
+void print_binary_tree(Binary_tree *root, int level) ;
 
 #endif

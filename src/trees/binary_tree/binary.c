@@ -1,10 +1,22 @@
 #include "binary.h"
 
-Binary_tree *allocate_binary()
+Binary_tree *allocate_binary(Info_bin info) 
 {
-    Binary_tree *new = (Binary_tree *)malloc(sizeof(Binary_tree));
-    // TODO: ASSERT ALLOC
-    return new;
+    Binary_tree *node = (Binary_tree *)malloc(sizeof(Binary_tree));
+
+    if (node == NULL) 
+    {
+        perror("Erro ao alocar nó da árvore binária");
+        exit(EXIT_FAILURE);
+    }
+
+    strcpy(node->info.eng_word, info.eng_word);
+    node->info.unit = info.unit;
+
+    node->left = NULL;
+    node->right = NULL;
+
+    return node;
 }
 
 Binary_tree *search_bin(Binary_tree *root, Info_bin info) 
@@ -30,7 +42,7 @@ bool insert_bin(Binary_tree **root, Binary_tree *new)
 
     if ((*root) == NULL)
         (*root) = new;  
-    else if (strcmp(new->info.eng_word,(*root)->info.eng_word) < 0)
+    else if (strcmp(new->info.eng_word, (*root)->info.eng_word) < 0)
         result = insert_bin(&(*root)->left, new);  
     else if (strcmp(new->info.eng_word, (*root)->info.eng_word) > 0) 
         result = insert_bin(&(*root)->right, new);  
@@ -42,13 +54,27 @@ bool insert_bin(Binary_tree **root, Binary_tree *new)
 
 void register_bin(Binary_tree **root, Info_bin info)
 {
-    Binary_tree *new = allocate_binary();
-    new->info = info;
+    Binary_tree *new = allocate_binary(info);
 
     if (!insert_bin(root, new))
     {
         // TODO: ERROR
-        // RAISE_ERROR("insert enrol, code already inserted");  
-        // deallocate_enrollment(new);
+    }
+}
+
+// Função para imprimir a árvore binária em ordem alfabética
+void print_binary_tree(Binary_tree *root, int level) 
+{
+    if (root != NULL)
+    {
+        // Percorre o nó da esquerda (ordem in-order)
+        print_binary_tree(root->left, level + 1);
+
+        // Imprime o nível e a palavra em inglês
+        for (int i = 0; i < level; i++) printf("  ");
+        printf("- %s\n", root->info.eng_word);
+
+        // Percorre o nó da direita
+        print_binary_tree(root->right, level + 1);
     }
 }

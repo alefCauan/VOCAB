@@ -10,22 +10,20 @@ FILE *_open_file(const char *file_name, const char *type)
     return file;
 }
 
-void scan_file_line() 
+// Função principal de leitura do arquivo
+void scan_file_line(Zwei_drei_tree **root) 
 {
     FILE *parser = _open_file(PARSER_PATH, "r");
 
     char line[1024];
+    int unit = 0;
 
     while (fgets(line, sizeof(line), parser)) 
     {
         line[strcspn(line, "\n")] = '\0';
 
         if (line[0] == UNIT_TOKEN) 
-        {
-            printf("----------------------------------------------------\n");
-            printf("Nova unidade: %s\n", line);
-            printf("----------------------------------------------------\n");
-        }
+            unit += 1;
         else 
         {
             char *english_word = strtok(line, ENG_TOKEN);
@@ -33,12 +31,11 @@ void scan_file_line()
 
             if (english_word != NULL && translations != NULL) 
             {
-                printf("Palavra em inglês: %s\n", english_word);
-                
                 char *translation = strtok(translations, BR_TOKEN);
+
                 while (translation != NULL) 
                 {
-                    printf("Tradução: %s\n", translation);
+                    insert_vocabulary(root, translation, english_word, unit);
                     translation = strtok(NULL, BR_TOKEN);
                 }
             }
@@ -48,6 +45,36 @@ void scan_file_line()
     fclose(parser);
 }
 
+// Função para inserir vocabulário na árvore
+void insert_vocabulary(Zwei_drei_tree **root, char *translation, char *english_word, int unit) 
+{
+    int info = 0;
+    Zwei_drei_tree *result = search_23_tree(*root, translation, info);
+    Info_bin info_bin;
+
+    info_bin.unit = unit;
+    strcpy(info_bin.eng_word, english_word);
+
+    if (result) 
+    {
+        if (info == 1)
+            register_bin(&result->info1.eng_words, info_bin);
+        else
+            register_bin(&result->info2.eng_words, info_bin);
+    } 
+    else 
+    {
+        Info new_info, rise;
+        strcpy(new_info.br_word, translation);
+        new_info.eng_words = NULL;
+
+        register_bin(&new_info.eng_words, info_bin);
+        insert_tree_23(NULL, root, new_info, &rise);
+    }
+
+    // print_tree(*root, 0);  // Imprime a árvore atualizada
+    // print_tree_with_translations(*root, 0);
+}
 
 void printf_file_line()
 {

@@ -10,9 +10,8 @@
 
 typedef struct Info {
     /////////////////////
-    Binary_tree eng_words;
+    Binary_tree *eng_words;
     char br_word[25];
-    int unit;
     /////////////////////
 }Info;
 
@@ -49,6 +48,9 @@ int remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info);
 
 void print_tree(Zwei_drei_tree *root, int level); 
 
+Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word, int info);
+
+void print_tree_with_translations(Zwei_drei_tree *root, int level);
 
 // Além disso, permita ao usuário:
 // (i) informar uma unidade e então imprima todas as palavras da unidade em português seguida das
