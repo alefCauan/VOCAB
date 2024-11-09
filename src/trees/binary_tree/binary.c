@@ -19,6 +19,17 @@ Binary_tree *allocate_binary(Info_bin info)
     return node;
 }
 
+void deallocate_binary_tree(Binary_tree *root)
+{
+    if(root)
+    {
+        deallocate_binary_tree(root->left);
+        deallocate_binary_tree(root->right);
+
+        free(root);
+    }
+}
+
 Binary_tree *search_bin(Binary_tree *root, Info_bin info) 
 {
     Binary_tree *result = NULL;  
@@ -71,10 +82,22 @@ void print_binary_tree(Binary_tree *root, int level)
         print_binary_tree(root->left, level + 1);
 
         // Imprime o nível e a palavra em inglês
-        for (int i = 0; i < level; i++) printf("  ");
-        printf("- %s\n", root->info.eng_word);
+        for (int i = 0; i < level; i++) 
+            printf("  ");
+            
+        printf("* %s\n", root->info.eng_word);
 
         // Percorre o nó da direita
         print_binary_tree(root->right, level + 1);
+    }
+}
+
+void show_all_eng_words(Binary_tree *root)
+{
+    if(root)
+    {
+        show_all_eng_words(root->left);
+        printf("  %s", root->info.eng_word);
+        show_all_eng_words(root->right);
     }
 }

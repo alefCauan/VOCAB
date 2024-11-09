@@ -65,7 +65,9 @@ void insert_vocabulary(Zwei_drei_tree **root, char *translation, char *english_w
     else 
     {
         Info new_info, rise;
+
         strcpy(new_info.br_word, translation);
+        new_info.unit = unit;
         new_info.eng_words = NULL;
 
         register_bin(&new_info.eng_words, info_bin);

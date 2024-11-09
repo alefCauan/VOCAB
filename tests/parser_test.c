@@ -8,7 +8,10 @@ int main()
     root = NULL;
     scan_file_line(&root);
 
-    // print_tree(root, 0);
+    print_tree(root, 0);
+    // print_bin_tree(root, 0);
+
+    deallocate_tree(root);
 
     return 0;
 }

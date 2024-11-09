@@ -27,12 +27,16 @@ typedef struct Binary_tree{
 
 Binary_tree *allocate_binary(Info_bin info);
 
+void deallocate_binary_tree(Binary_tree *root);
+
 Binary_tree *search_bin(Binary_tree *root, Info_bin info);
 
 bool insert_bin(Binary_tree **root, Binary_tree *new);
 
 void register_bin(Binary_tree **root, Info_bin info);
 
-void print_binary_tree(Binary_tree *root, int level) ;
+void print_binary_tree(Binary_tree *root, int level);
+
+void show_all_eng_words(Binary_tree *root);
 
 #endif

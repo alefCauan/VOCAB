@@ -7,6 +7,7 @@ Zwei_drei_tree *alloc_tree(Info info, Zwei_drei_tree *left, Zwei_drei_tree *mid,
 	node = (Zwei_drei_tree *)malloc(sizeof(Zwei_drei_tree));
 
 	(*node).info1 = info;
+	(*node).info1 = info;
 	
 	(*node).two_info = false;
 	(*node).left = left;
@@ -14,6 +15,22 @@ Zwei_drei_tree *alloc_tree(Info info, Zwei_drei_tree *left, Zwei_drei_tree *mid,
 	(*node).right = right;
 
 	return node;
+}
+
+void deallocate_tree(Zwei_drei_tree *root)
+{
+	if(root)
+	{
+        deallocate_binary_tree(root->info1.eng_words);
+        if (root->two_info) 
+            deallocate_binary_tree(root->info2.eng_words);
+
+		deallocate_tree(root->left);
+		deallocate_tree(root->mid);
+		deallocate_tree(root->right);
+
+		free(root);
+	}
 }
 
 bool is_leaf(Zwei_drei_tree *root)
@@ -357,28 +374,45 @@ int remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
 	return remove;
 }
 
-
 // Função para imprimir a árvore (apenas para verificação)
 void print_tree(Zwei_drei_tree *root, int level) 
 {
-    if (root == NULL) return;
+    if (root != NULL) 
+	{
+		for (int i = 0; i < level; i++) 
+			printf("  ");
+		printf("%d - %s", level, root->info1.br_word);
+		if (root->two_info) 
+			printf(", %s", root->info2.br_word);
+		printf("\n");
 
-    for (int i = 0; i < level; i++) 
-		printf("  ");
+		if (root->left) 
+			print_tree(root->left, level + 1);
+		if (root->mid) 
+			print_tree(root->mid, level + 1);
+		if (root->right) 
+			print_tree(root->right, level + 1);
+	}
+}
 
-    printf("- %s", root->info1.br_word);
-	print_binary_tree(root->info1.eng_words, 0);
+void print_bin_tree(Zwei_drei_tree *root, int level) 
+{
+    if (root != NULL) 
+	{
+		for (int i = 0; i < level; i++) 
+			printf("  ");
+		print_binary_tree(root->info1.eng_words, level);
+		if (root->two_info) 
+			print_binary_tree(root->info2.eng_words, level);
+		printf("\n");
 
-    if (root->two_info) 
-		print_binary_tree(root->info2.eng_words, 0);
-		printf(", %s\n", root->info2.br_word);
-
-    if (root->left) 
-		print_tree(root->left, level + 1);
-    if (root->mid) 
-		print_tree(root->mid, level + 1);
-    if (root->right) 
-		print_tree(root->right, level + 1);
+		if (root->left) 
+			print_bin_tree(root->left, level + 1);
+		if (root->mid) 
+			print_bin_tree(root->mid, level + 1);
+		if (root->right) 
+			print_bin_tree(root->right, level + 1);
+	}
 }
 
 Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word, int info) 
@@ -414,30 +448,54 @@ Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word, int in
 
 }
 
-
-void print_tree_with_translations(Zwei_drei_tree *root, int level) 
+void show_port_and_eng_words(Zwei_drei_tree *root, int unit)
 {
-    if (root == NULL) 
-		return;
+	if(root)
+	{
+		if (root->info1.unit == unit)
+		{
+			printf("PORTUGUES: %s\n", root->info1.br_word);
+			printf("  Traduções em inglês:");
+            show_all_eng_words(root->info1.eng_words);
+            printf("\n");
+		}
 
-    // Indentação do nível da árvore 2-3 e impressão da palavra em português
-    for (int i = 0; i < level; i++) printf("  ");
-    printf("- %s: ", root->info1.br_word);
+		if (root->two_info && root->info2.unit == unit)
+		{
+			printf("PORTUGUES: %s\n", root->info2.br_word);
+			printf("  Traduções em inglês:");
+            show_all_eng_words(root->info2.eng_words);
+            printf("\n");
+		}
+	
+		show_port_and_eng_words(root->left, unit);
+		show_port_and_eng_words(root->mid, unit);
+		show_port_and_eng_words(root->right, unit);
+	}
+}
 
-    // Imprime a árvore binária associada a info1 (traduções para inglês)
-    print_binary_tree(root->info1.eng_words, 0);
-    printf("\n");
+void show_eng_words(Zwei_drei_tree *root, const char *br_word)
+{
+	if(root)
+	{
+		if (strcmp(root->info1.br_word, br_word) == 0)
+		{
+			printf("PORTUGUES: %s\n", root->info1.br_word);
+			printf("  Traduções em inglês:");
+            show_all_eng_words(root->info1.eng_words);
+            printf("\n");
+		}
 
-    // Se houver um segundo info, imprime ele também e sua árvore binária associada
-    if (root->two_info) {
-        for (int i = 0; i < level; i++) printf("  ");
-        printf("- %s: ", root->info2.br_word);
-        print_binary_tree(root->info2.eng_words, 0);
-        printf("\n");
-    }
-
-    // Chama recursivamente para as subárvores esquerda, do meio e direita da árvore 2-3
-    if (root->left) print_tree_with_translations(root->left, level + 1);
-    if (root->mid) print_tree_with_translations(root->mid, level + 1);
-    if (root->right) print_tree_with_translations(root->right, level + 1);
+		if (root->two_info && strcmp(root->info2.br_word, br_word) == 0)
+		{
+			printf("PORTUGUES: %s\n", root->info2.br_word);
+			printf("  Traduções em inglês:");
+            show_all_eng_words(root->info2.eng_words);
+            printf("\n");
+		}
+	
+		show_eng_words(root->left, br_word);
+		show_eng_words(root->mid, br_word);
+		show_eng_words(root->right, br_word);
+	}
 }
