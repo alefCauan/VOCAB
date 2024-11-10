@@ -73,6 +73,96 @@ void register_bin(Binary_tree **root, Info_bin info)
     }
 }
 
+
+void remove_eng_word_no_children(Binary_tree **root, Binary_tree *current, Binary_tree *parent)
+{
+    if (parent == NULL) 
+        *root = NULL;
+    else if (parent->right == current)
+        parent->right = NULL;
+    else
+        parent->left = NULL;
+
+    free(current);
+}
+
+void remove_eng_word_one_child(Binary_tree **root, Binary_tree *current, Binary_tree *parent)
+{
+    Binary_tree *child = (current->left != NULL) ? current->left : current->right;
+
+    if (parent == NULL) 
+        *root = child;
+    else if (parent->right == current)
+        parent->right = child;
+    else
+        parent->left = child;
+
+    free(current);
+}
+
+
+void remove_eng_word_two_children(Binary_tree **root, Binary_tree *current)
+{
+    // Encontrar o sucessor (menor valor na subárvore direita)
+    Binary_tree *successor = current->right;
+    Binary_tree *successor_parent = current;
+
+    while (successor->left != NULL)
+    {
+        successor_parent = successor;
+        successor = successor->left;
+    }
+
+    // Copiar os dados do sucessor para o nó atual
+    current->info = successor->info;
+
+    // Remover o sucessor da árvore
+    if (successor_parent->left == successor)
+        successor_parent->left = successor->right;
+    else
+        successor_parent->right = successor->right;
+
+    free(successor);
+}
+
+bool remove_eng_word_bin(Binary_tree **root, Info_bin info_bin)
+{
+    Binary_tree *current;
+    current = *root;
+    Binary_tree *parent;
+    parent = NULL;
+    bool result = true;
+
+    // Procura o nó a ser removido
+    while (current != NULL && strcmp(current->info.eng_word, info_bin.eng_word) != 0 && current->info.unit != info_bin.unit) 
+    {
+        parent = current;
+        if (strcmp(current->info.eng_word, info_bin.eng_word) > 0)
+            current = current->right;
+        else
+            current = current->left;
+    }
+
+    // Se o nó não for encontrado
+    if (current != NULL)
+    {
+        // Caso 1: Nó sem filhos
+        if (current->left == NULL && current->right == NULL)
+            remove_eng_word_no_children(root, current, parent);
+        // Caso 2: Nó com dois filhos
+        else if (current->left != NULL && current->right != NULL)
+            remove_eng_word_two_child(root, current, parent);
+        // Caso 3: Nó com um filho
+        else 
+            remove_eng_word_one_children(root, current);
+    }
+    else
+        result = false;
+
+    return result;
+}
+
+
 // Função para imprimir a árvore binária em ordem alfabética
 void print_binary_tree(Binary_tree *root, int level) 
 {

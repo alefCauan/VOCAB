@@ -499,3 +499,46 @@ void show_eng_words(Zwei_drei_tree *root, const char *br_word)
 		show_eng_words(root->right, br_word);
 	}
 }
+
+// Função para verificar se a árvore binária está vazia
+bool is_binary_tree_empty(Binary_tree *root) { return root == NULL; }
+
+void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin) 
+{
+    if (*root)
+	{
+		bool removed = false;
+
+		remove_eng_word(&(*root)->left, info_bin);
+		remove_eng_word(&(*root)->mid, info_bin);
+		remove_eng_word(&(*root)->right, info_bin);
+
+		removed = remove_eng_word_bin(&(*root)->info1.eng_words, info_bin);
+
+		if (removed && is_binary_tree_empty((*root)->info1.eng_words)) 
+		{
+			Info rise;
+			remove_23_tree(NULL, root, (*root)->info1.br_word, &rise);
+		}
+
+		if (!removed && (*root)->two_info) 
+		{
+			removed = remove_eng_word_bin(&(*root)->info2.eng_words, info_bin);
+
+			if (removed && is_binary_tree_empty((*root)->info2.eng_words)) 
+			{
+				Info rise;
+				remove_23_tree(NULL, root, (*root)->info2.br_word, &rise);
+			}
+		}
+	}
+
+}
+
+void remove_port_word(Zwei_drei_tree *root, Info info)
+{
+	if(root)
+	{
+
+	}
+}

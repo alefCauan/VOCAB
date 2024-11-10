@@ -56,29 +56,33 @@ void print_tree(Zwei_drei_tree *root, int level);
 void print_bin_tree(Zwei_drei_tree *root, int level); 
 
 
-// Além disso, permita ao usuário:
-// (i) informar uma unidade e então imprima todas as palavras da unidade em português seguida das
-// equivalentes em inglês;
+
+/*
+(i) informar uma unidade e então imprima todas as palavras da unidade em português seguida das
+equivalentes em inglês;
+*/
 void show_port_and_eng_words(Zwei_drei_tree *root, int unit);
 
-
-// (ii)informar uma palavra em português e então imprima todas as palavras em inglês equivalente a palavra em
-// português dada, independente da unidade;
+/*
+(ii)informar uma palavra em português e então imprima todas as palavras em inglês equivalente a palavra em
+português dada, independente da unidade;
+*/
 void show_eng_words(Zwei_drei_tree *root, const char *br_word);
 
+bool is_binary_tree_empty(Binary_tree *root);
+/*
+(iii)informar uma palavra em inglês e e a unidade a qual a mesma pertence remove-la das árvores binárias
+das quais ela pertence. Caso ela seja a única palavra em uma das árvores binárias, remover também da
+árvore 2-3;
+*/
+void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin);
 
-// (iii)informar uma palavra em inglês e e a unidade a qual a mesma pertence remove-la das árvores binárias
-// das quais ela pertence. Caso ela seja a única palavra em uma das árvores binárias, remover também da
-// árvore 2-3;
-
-// void remove_eng_word
-
-
-// (iv)informar uma palavra em português e a unidade a qual a mesma pertence e então remove-la, para isto
-// deve remover a palavra em inglês da árvore binária correspondente a palavra em português da mesma
-// unidade. Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da
-// árvore 2-3.
-
-// void remove_port_word
+/*
+(iv)informar uma palavra em português e a unidade a qual a mesma pertence e então remove-la, para isto
+deve remover a palavra em inglês da árvore binária correspondente a palavra em português da mesma
+unidade. Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da
+árvore 2-3.
+*/
+void remove_port_word(Zwei_drei_tree *root, Info info);
 
 #endif

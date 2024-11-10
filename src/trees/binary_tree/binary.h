@@ -35,6 +35,14 @@ bool insert_bin(Binary_tree **root, Binary_tree *new);
 
 void register_bin(Binary_tree **root, Info_bin info);
 
+void remove_eng_word_no_children(Binary_tree **root, Binary_tree *current, Binary_tree *parent);
+
+void remove_eng_word_one_child(Binary_tree **root, Binary_tree *current, Binary_tree *parent);
+
+void remove_eng_word_two_children(Binary_tree **root, Binary_tree *current);
+
+bool remove_eng_word_bin(Binary_tree **root, Info_bin info_bin);
+
 void print_binary_tree(Binary_tree *root, int level);
 
 void show_all_eng_words(Binary_tree *root);
