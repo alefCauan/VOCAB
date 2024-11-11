@@ -134,10 +134,10 @@ bool remove_eng_word_bin(Binary_tree **root, Info_bin info_bin)
     bool result = true;
 
     // Procura o nó a ser removido
-    while (current != NULL && strcmp(current->info.eng_word, info_bin.eng_word) != 0 && current->info.unit != info_bin.unit) 
+    while (current != NULL && strcmp(current->info.eng_word, info_bin.eng_word) != 0) 
     {
         parent = current;
-        if (strcmp(current->info.eng_word, info_bin.eng_word) > 0)
+        if (strcmp(info_bin.eng_word, current->info.eng_word) > 0)
             current = current->right;
         else
             current = current->left;
@@ -146,15 +146,12 @@ bool remove_eng_word_bin(Binary_tree **root, Info_bin info_bin)
     // Se o nó não for encontrado
     if (current != NULL)
     {
-        // Caso 1: Nó sem filhos
         if (current->left == NULL && current->right == NULL)
             remove_eng_word_no_children(root, current, parent);
-        // Caso 2: Nó com dois filhos
         else if (current->left != NULL && current->right != NULL)
-            remove_eng_word_two_child(root, current, parent);
-        // Caso 3: Nó com um filho
+            remove_eng_word_two_children(root, current);
         else 
-            remove_eng_word_one_children(root, current);
+            remove_eng_word_one_child(root, current, parent);
     }
     else
         result = false;

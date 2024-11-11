@@ -516,29 +516,50 @@ void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin)
 		removed = remove_eng_word_bin(&(*root)->info1.eng_words, info_bin);
 
 		if (removed && is_binary_tree_empty((*root)->info1.eng_words)) 
-		{
-			Info rise;
-			remove_23_tree(NULL, root, (*root)->info1.br_word, &rise);
-		}
+			remove_23(NULL, root, (*root)->info1);
 
 		if (!removed && (*root)->two_info) 
 		{
 			removed = remove_eng_word_bin(&(*root)->info2.eng_words, info_bin);
 
 			if (removed && is_binary_tree_empty((*root)->info2.eng_words)) 
-			{
-				Info rise;
-				remove_23_tree(NULL, root, (*root)->info2.br_word, &rise);
-			}
+				remove_23(NULL, root, (*root)->info2);
 		}
 	}
 
 }
 
-void remove_port_word(Zwei_drei_tree *root, Info info)
+void remove_all_eng_words(Zwei_drei_tree **root, Binary_tree *eng_words)
 {
-	if(root)
+	if(eng_words)
 	{
+		remove_all_eng_words(root, eng_words->left);
+		remove_all_eng_words(root, eng_words->right);
 
+		remove_eng_word(root, eng_words->info);
 	}
+}
+
+void remove_port_word(Zwei_drei_tree **root, Info info) 
+{
+    if (*root)
+	{
+		if (strcmp(info.br_word, (*root)->info1.br_word) < 0) 
+			remove_port_word(&(*root)->left, info);
+		else if (!(*root)->two_info || strcmp(info.br_word, (*root)->info1.br_word) > 0) 
+			remove_port_word(&(*root)->mid, info);
+		else if ((*root)->two_info) 
+			remove_port_word(&(*root)->right, info);
+		else 
+		{
+			// Encontrou o nó correspondente para remoção
+			if (strcmp(info.br_word, (*root)->info1.br_word) == 0) 
+				remove_all_eng_words(root, (*root)->info1.eng_words);
+			else if ((*root)->two_info && strcmp(info.br_word, (*root)->info2.br_word) == 0) 
+				remove_all_eng_words(root, (*root)->info2.eng_words);
+			
+			Info rise;
+			remove_23(NULL, root, info);
+		}
+	} 
 }

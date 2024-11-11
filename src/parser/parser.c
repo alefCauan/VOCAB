@@ -78,10 +78,4 @@ void insert_vocabulary(Zwei_drei_tree **root, char *translation, char *english_w
     // print_tree_with_translations(*root, 0);
 }
 
-void printf_file_line()
-{
-    /////////////////////////////
-    /////////////////////////////
-    /////////////////////////////
-}
 

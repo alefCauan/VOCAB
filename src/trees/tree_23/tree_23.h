@@ -77,12 +77,13 @@ das quais ela pertence. Caso ela seja a única palavra em uma das árvores biná
 */
 void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin);
 
+void remove_all_eng_words(Zwei_drei_tree **root, Binary_tree *eng_words);
 /*
 (iv)informar uma palavra em português e a unidade a qual a mesma pertence e então remove-la, para isto
 deve remover a palavra em inglês da árvore binária correspondente a palavra em português da mesma
 unidade. Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da
 árvore 2-3.
 */
-void remove_port_word(Zwei_drei_tree *root, Info info);
+void remove_port_word(Zwei_drei_tree **root, Info info);
 
 #endif
