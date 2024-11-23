@@ -415,38 +415,32 @@ void print_bin_tree(Zwei_drei_tree *root, int level)
 	}
 }
 
-Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word, int info) 
+Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word, int *info) 
 {
-	Zwei_drei_tree *result;
-	result = NULL;
+    if (root == NULL) 
+        return NULL;
 
-    if (root != NULL) 
-	{
-        
-		if (strcmp(br_word, root->info1.br_word) == 0)
-		{
-			result = root;
-			info = 1;
-		}
-		else if (root->two_info && strcmp(br_word, root->info2.br_word) == 0) 
-		{
-			result = root;
-			info = 2;
-		}
-		else
-		{
-			if (strcmp(br_word, root->info1.br_word) < 0) 
-				result = search_23_tree(root->left, br_word, info);
-			else if (!root->two_info || (strcmp(br_word, root->info2.br_word) < 0)) 
-				result = search_23_tree(root->mid, br_word, info);
-			else 
-				result = search_23_tree(root->right, br_word, info);
-		}
+    // Verifica o primeiro item (info1)
+    if (strcmp(br_word, root->info1.br_word) == 0) {
+        *info = 1;
+        return root;
     }
 
-	return result;
+    // Verifica o segundo item (info2), se existir
+    if (root->two_info && strcmp(br_word, root->info2.br_word) == 0) {
+        *info = 2;
+        return root;
+    }
 
+    // Decide a próxima subárvore a buscar
+    if (strcmp(br_word, root->info1.br_word) < 0) 
+        return search_23_tree(root->left, br_word, info);  // Subárvore esquerda
+    else if (!root->two_info || strcmp(br_word, root->info2.br_word) < 0) 
+        return search_23_tree(root->mid, br_word, info);   // Subárvore do meio
+    else 
+        return search_23_tree(root->right, br_word, info); // Subárvore direita
 }
+
 
 void show_port_and_eng_words(Zwei_drei_tree *root, int unit)
 {
@@ -474,30 +468,69 @@ void show_port_and_eng_words(Zwei_drei_tree *root, int unit)
 	}
 }
 
-void show_eng_words(Zwei_drei_tree *root, const char *br_word)
+// Remove espaços extras e caracteres invisíveis das extremidades
+void trim_string(char *str) 
 {
-	if(root)
+    char *start = str;
+    char *end = str + strlen(str) - 1;
+
+    // Remove espaços à esquerda
+    while (isspace((unsigned char)*start)) start++;
+
+    // Remove espaços à direita
+    while (end > start && isspace((unsigned char)*end)) end--;
+
+    // Ajusta o final da string
+    *(end + 1) = '\0';
+
+    // Move a string normalizada para o início
+    if (start != str) memmove(str, start, end - start + 2);
+}
+
+void show_eng_words(Zwei_drei_tree *root, const char *br_word) 
+{
+    if (root) 
 	{
-		if (strcmp(root->info1.br_word, br_word) == 0)
+        // Normaliza as strings antes da comparação
+        char normalized_br_word[256];
+        strcpy(normalized_br_word, br_word);
+        trim_string(normalized_br_word);
+
+		char normalized_info1[256];
+        strcpy(normalized_info1, root->info1.br_word);
+        trim_string(normalized_info1);
+
+		char normalized_info2[256];
+		if(root->two_info)
 		{
-			printf("PORTUGUES: %s\n", root->info1.br_word);
-			printf("  Traduções em inglês:");
-            show_all_eng_words(root->info1.eng_words);
-            printf("\n");
+			strcpy(normalized_info2, root->info2.br_word);
+			trim_string(normalized_info2);
 		}
 
-		if (root->two_info && strcmp(root->info2.br_word, br_word) == 0)
+		// if (!root->two_info)
+        //     printf("%s - %s - %d\n", normalized_info1, normalized_br_word, strcmp(normalized_br_word, normalized_info1));
+        // else {
+        //     printf("%s - %s - %d\n", normalized_info1, normalized_br_word, strcmp(normalized_info1, normalized_br_word));
+        //     printf("%s - %s - %d\n", normalized_info2, normalized_br_word, strcmp(normalized_info2, normalized_br_word));
+        // }
+
+        if (strcmp(normalized_br_word, normalized_info1) == 0) 
 		{
-			printf("PORTUGUES: %s\n", root->info2.br_word);
-			printf("  Traduções em inglês:");
+			printf("Entrou\n");
+            show_all_eng_words(root->info1.eng_words);
+            printf("\n");
+        }
+        if (root->two_info && strcmp(normalized_br_word, normalized_info2) == 0) 
+		{
+			printf("Entrou\n");
             show_all_eng_words(root->info2.eng_words);
             printf("\n");
-		}
-	
-		show_eng_words(root->left, br_word);
-		show_eng_words(root->mid, br_word);
-		show_eng_words(root->right, br_word);
-	}
+        }
+
+        show_eng_words(root->left, br_word);
+        show_eng_words(root->mid, br_word);
+        show_eng_words(root->right, br_word);
+    }
 }
 
 // Função para verificar se a árvore binária está vazia

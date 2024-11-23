@@ -7,7 +7,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-
 // struct da arvore BINARIA
 typedef struct Info_bin{
     ///////////////////

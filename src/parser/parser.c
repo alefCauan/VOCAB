@@ -48,8 +48,8 @@ void scan_file_line(Zwei_drei_tree **root)
 // Função para inserir vocabulário na árvore
 void insert_vocabulary(Zwei_drei_tree **root, char *translation, char *english_word, int unit) 
 {
-    int info = 0;
-    Zwei_drei_tree *result = search_23_tree(*root, translation, info);
+    int info = 1;
+    Zwei_drei_tree *result = search_23_tree(*root, translation, &info);
     Info_bin info_bin;
 
     info_bin.unit = unit;
@@ -59,7 +59,7 @@ void insert_vocabulary(Zwei_drei_tree **root, char *translation, char *english_w
     {
         if (info == 1)
             register_bin(&result->info1.eng_words, info_bin);
-        else
+        else if(info == 2)
             register_bin(&result->info2.eng_words, info_bin);
     } 
     else 
@@ -73,9 +73,6 @@ void insert_vocabulary(Zwei_drei_tree **root, char *translation, char *english_w
         register_bin(&new_info.eng_words, info_bin);
         insert_tree_23(NULL, root, new_info, &rise);
     }
-
-    // print_tree(*root, 0);  // Imprime a árvore atualizada
-    // print_tree_with_translations(*root, 0);
 }
 
 

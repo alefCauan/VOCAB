@@ -19,8 +19,6 @@ FILE *_open_file(const char *file_name, const char *type);
 
 void scan_file_line(Zwei_drei_tree **root);
 
-void printf_file_line();
-
 void insert_vocabulary(Zwei_drei_tree **root, char *translation, char *english_word, int unit);
 
 

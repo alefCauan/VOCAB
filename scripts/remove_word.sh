@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SRC_MAIN="../tests/show_word.c"
+SRC_MAIN="../tests/remove_word.c"
 SRC_23="../src/trees/binary_tree/binary.c"
 SRC_BIN="../src/trees/tree_23/tree_23.c"
 SRC_PARSER="../src/parser/parser.c"
@@ -44,4 +44,4 @@ gcc -g  binary.o tree_23.o utils.o parser.o main.o -o ../bin/$OUT
 
 rm *.o
 
-gdb ../bin/$OUT
+../bin/$OUT
