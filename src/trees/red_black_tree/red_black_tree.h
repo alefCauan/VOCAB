@@ -6,8 +6,13 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define RED 1
-#define BLACK 0
+// #define RED 1
+// #define BLACK 0
+
+typedef enum {
+    BLACK = 0,
+    RED = 1
+} Color;
 
 // Estrutura para armazenar a informação do nó
 typedef struct Info_rb {
@@ -18,13 +23,13 @@ typedef struct Info_rb {
 // Estrutura do nó da árvore Rubro-Negra
 typedef struct Red_Black_Tree {
     Info_rb info;
-    int color;
+    Color color;
     struct Red_Black_Tree *left;
     struct Red_Black_Tree *right;
 } Red_Black_Tree;
 
 // Funções auxiliares
-int color(Red_Black_Tree *H);
+Color color(Red_Black_Tree *H);
 void rotateLeft(Red_Black_Tree **root);
 void rotateRight(Red_Black_Tree **root);
 void swapColor(Red_Black_Tree *H);
@@ -41,7 +46,7 @@ void removeMin(Red_Black_Tree **H);
 
 // Funções de balanceamento e remoção
 void balance(Red_Black_Tree **H);
-int removeNode(Red_Black_Tree **H, const char *word);
-int removeInTree(Red_Black_Tree **root, const char *word);
+bool removeNode(Red_Black_Tree **H, const char *word);
+bool removeInTree(Red_Black_Tree **root, const char *word);
 
 #endif
