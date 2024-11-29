@@ -2,18 +2,15 @@
 #include "red_black_tree.h"
 #include "../../utils/aux.h"
 
-// Função para alocar um nó na árvore Rubro-Negra
 Red_Black_Tree *allocate_red_black(Info_rb info) 
 {
     Red_Black_Tree *node = (Red_Black_Tree *)malloc(sizeof(Red_Black_Tree));
     
     ASSERT_ALLOC(node, "allocate red_black");
 
-    // Copia os dados
-    strcpy(node->info.eng_word, info.eng_word);
+    strcpy(node->info.br_word, info.br_word);
     node->info.unit = info.unit;
 
-    // Configurações iniciais
     node->color = RED;
     node->left = NULL;
     node->right = NULL;
@@ -21,92 +18,142 @@ Red_Black_Tree *allocate_red_black(Info_rb info)
     return node;
 }
 
-// Função para desalocar toda a árvore Rubro-Negra
 void deallocate_red_black_tree(Red_Black_Tree *root) 
 {
     if (root) 
     {
-        deallocate_red_black_tree(root->left);  // Desaloca subárvore esquerda
-        deallocate_red_black_tree(root->right); // Desaloca subárvore direita
+        deallocate_red_black_tree(root->left);  
+        deallocate_red_black_tree(root->right); 
 
         free(root); 
     }
 }
 
 
-// Funções auxiliares
 Color color(Red_Black_Tree *root) 
 {
     return (root == NULL) ? BLACK : root->color;
 }
 
-void rotateLeft(Red_Black_Tree **root) 
+bool is_red(Red_Black_Tree *node) 
 {
-    if (root && *root && (*root)->right) 
+    //////////////////////////////////////////
+    return node != NULL && node->color == RED;
+    //////////////////////////////////////////
+}
+
+void rotate_left(Red_Black_Tree **root) 
+{
+    if (*root && (*root)->right) 
     {
-        Red_Black_Tree *aux = (*root)->right;
-        (*root)->right = aux->left;
-        aux->left = *root;
-        aux->color = (*root)->color;
+        Red_Black_Tree *new_root = (*root)->right;
+
+        (*root)->right = new_root->left; 
+        new_root->left = *root;         
+
+        new_root->color = (*root)->color;
         (*root)->color = RED;
-        *root = aux;
+
+        *root = new_root;
     }
 }
 
-void rotateRight(Red_Black_Tree **root) 
-{
-    if (root && *root && (*root)->left) 
-    {
-        Red_Black_Tree *aux = (*root)->left;
 
-        (*root)->left = aux->right;
-        aux->right = *root;
-        aux->color = (*root)->color;
+void rotate_right(Red_Black_Tree **root) 
+{
+    if (*root && (*root)->left) 
+    {
+        Red_Black_Tree *new_root = (*root)->left;
+
+        (*root)->left = new_root->right; 
+        new_root->right = *root;        
+
+        new_root->color = (*root)->color;
         (*root)->color = RED;
-        *root = aux;
+
+        *root = new_root;
     }
 }
 
-void swapColor(Red_Black_Tree *root) 
+
+void swap_color(Red_Black_Tree *node) 
 {
-    if (root != NULL) 
+    if (node) 
     {
-        root->color = !root->color;
-        if (root->left) 
-            root->left->color = !root->left->color;
-        if (root->right) 
-            root->right->color = !root->right->color;
+        node->color = !node->color; 
+        if (node->left) 
+            node->left->color = !node->left->color;
+        if (node->right) 
+            node->right->color = !node->right->color; 
     }
 }
 
-void move2LeftRED(Red_Black_Tree **root) 
+Red_Black_Tree *balance(Red_Black_Tree *node) 
 {
-    if (root && *root) 
+    if (is_red(node->right) && !is_red(node->left)) 
+        rotate_left(&node);
+    if (is_red(node->left) && is_red(node->left->left)) 
+        rotate_right(&node);
+    if (is_red(node->left) && is_red(node->right)) 
+        swap_color(node);
+
+    return node;
+}
+
+
+Red_Black_Tree *insert_rb(Red_Black_Tree *root, Info_rb info) 
+{
+    if (root == NULL) 
+        return allocate_red_black(info);
+
+    if (strcmp(info.br_word, root->info.br_word) < 0)
+        root->left = insert_rb(root->left, info);
+    else if (strcmp(info.br_word, root->info.br_word) > 0)
+        root->right = insert_rb(root->right, info);
+
+    return balance(root);
+}
+
+
+Red_Black_Tree *register_rb(Red_Black_Tree *root, Info_rb info) 
+{
+    root = insert_rb(root, info);
+    root->color = BLACK;  
+    return root;
+}
+
+void move_left(Red_Black_Tree **node) 
+{
+    if (*node) 
     {
-        swapColor(*root);
-        if ((*root)->right && color((*root)->right->left) == RED) 
+        swap_color(*node); 
+
+        if ((*node)->right && is_red((*node)->right->left)) 
         {
-            rotateRight(&((*root)->right));
-            rotateLeft(root);
-            swapColor(*root);
+            rotate_right(&((*node)->right)); 
+            rotate_left(node);              
+            swap_color(*node);             
         }
     }
 }
 
-void move2RightRED(Red_Black_Tree **root) 
+
+void move_right(Red_Black_Tree **node) 
 {
-    if (root && *root) 
+    if (*node) 
     {
-        swapColor(*root);
-        if ((*root)->left && color((*root)->left->left) == RED) 
+        swap_color(*node); 
+
+        if ((*node)->left && is_red((*node)->left->left))
         {
-            rotateRight(root);
-            swapColor(*root);
+            rotate_right(node);  
+            swap_color(*node);   
         }
     }
 }
 
-Red_Black_Tree *findMin(Red_Black_Tree *root) 
+
+Red_Black_Tree *find_min(Red_Black_Tree *root) 
 {
     while (root && root->left) 
         root = root->left;
@@ -114,137 +161,85 @@ Red_Black_Tree *findMin(Red_Black_Tree *root)
     return root;
 }
 
-
-void balance(Red_Black_Tree **root) 
+void remove_min(Red_Black_Tree **root) 
 {
-    if (root && *root) 
-    {
-        if (color((*root)->right) == RED) 
-            rotateLeft(root);
-        if (color((*root)->left) == RED && color((*root)->left->left) == RED) 
-            rotateRight(root);
-        if (color((*root)->left) == RED && color((*root)->right) == RED) 
-            swapColor(*root);
-    }
-}
-
-void removeMin(Red_Black_Tree **root) 
-{
-    if (root && *root) 
+    if (*root) 
     {
         if ((*root)->left == NULL) 
         {
-            free(*root);
+            free(*root);  
             *root = NULL;
         } 
         else 
         {
-            if (color((*root)->left) == BLACK && color((*root)->left->left) == BLACK) 
-                move2LeftRED(root);
+            if (!is_red((*root)->left) && !is_red((*root)->left->left)) 
+                move_left(root);  
             
-            removeMin(&((*root)->left));
-            balance(root);
+            remove_min(&((*root)->left));  
+            
+            *root = balance(*root); 
         }
     }
 }
 
-bool removeNode(Red_Black_Tree **root, const char *word) 
-{
-    bool found = false; 
 
-    if (root && *root) 
+bool remove_node(Red_Black_Tree **root, const char *word) 
+{
+    bool found = false;
+
+    if (*root) 
     {
-        if (strcmp(word, (*root)->info.eng_word) < 0) 
+        if (strcmp(word, (*root)->info.br_word) < 0) 
         {
-            // Continua para o lado esquerdo
-            if ((*root)->left && color((*root)->left) == BLACK && color((*root)->left->left) == BLACK) 
-                move2LeftRED(root);
-            
-            found = removeNode(&((*root)->left), word);
+            if (!is_red((*root)->left) && !is_red((*root)->left->left)) 
+                move_left(root);
+
+            found = remove_node(&((*root)->left), word);
         } 
         else 
         {
-            if (color((*root)->left) == RED) 
-                rotateRight(root);
+            if (is_red((*root)->left)) 
+                rotate_right(root);
 
-            if (strcmp(word, (*root)->info.eng_word) == 0) 
+            if (strcmp(word, (*root)->info.br_word) == 0) 
             {
                 found = true;
 
                 if ((*root)->right == NULL) 
                 {
-                    free(*root);
+                    free(*root);  
                     *root = NULL;
                 } 
                 else 
                 {
-                    Red_Black_Tree *min = findMin((*root)->right);
-                    (*root)->info = min->info;
-
-                    removeMin(&((*root)->right));
+                    Red_Black_Tree *min = find_min((*root)->right);
+                    (*root)->info = min->info;  
+                    remove_min(&((*root)->right));  
                 }
             } 
             else 
             {
-                if ((*root)->right && color((*root)->right) == BLACK 
-                && color((*root)->right->left) == BLACK) 
-                    move2RightRED(root);
-                
-                found = removeNode(&((*root)->right), word);
+                if (!is_red((*root)->right) && !is_red((*root)->right->left)) 
+                    move_right(root);
+
+                found = remove_node(&((*root)->right), word);
             }
         }
 
-        balance(root);
+        if (*root) 
+            *root = balance(*root); 
     }
 
-    return found; 
+    return found;
 }
 
-bool removeInTree(Red_Black_Tree **root, const char *palavra) 
+bool remove_in_tree(Red_Black_Tree **root, const char *word) 
 {
-    bool result = removeNode(root, palavra); 
+    bool result = remove_node(root, word);
 
     if (*root) 
-        (*root)->color = BLACK; 
-    
-    return result; 
+        (*root)->color = BLACK;
+
+    return result;
 }
 
-// Insere um elemento na árvore Rubro-Negra
-Red_Black_Tree *insert(Red_Black_Tree **root, Info_rb info) 
-{
-    Red_Black_Tree *inserted = NULL;
-
-    if (*root == NULL) 
-    { // Caso base: cria um novo nó
-        Red_Black_Tree *new = allocate_red_black(info);        
-        *root = new;
-        inserted = new;
-    } 
-    else 
-    {
-        // Insere no lado esquerdo ou direito
-        if (strcmp(info.eng_word, (*root)->info.eng_word) < 0) 
-            inserted = insert(&((*root)->left), info);
-        else if (strcmp(info.eng_word, (*root)->info.eng_word) > 0) 
-            inserted = insert(&((*root)->right), info);
-        else 
-            inserted = NULL;
-        
-        balance(root);
-    }
-
-    return inserted;
-}
-
-
-// Função principal para inserir, garantindo que a root seja preta
-Red_Black_Tree* register_rb(Red_Black_Tree *root, Info_rb info) 
-{
-    root = insert(&root, info);
-
-    if (root) 
-        root->color = BLACK;
-
-    return root;
-}
