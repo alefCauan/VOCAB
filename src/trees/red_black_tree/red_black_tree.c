@@ -2,9 +2,9 @@
 #include "red_black_tree.h"
 #include "../../utils/aux.h"
 
-Red_Black_Tree *allocate_red_black(Info_rb info) 
+Red_black_tree *allocate_red_black(Info_rb info) 
 {
-    Red_Black_Tree *node = (Red_Black_Tree *)malloc(sizeof(Red_Black_Tree));
+    Red_black_tree *node = (Red_black_tree *)malloc(sizeof(Red_black_tree));
     
     ASSERT_ALLOC(node, "allocate red_black");
 
@@ -18,7 +18,7 @@ Red_Black_Tree *allocate_red_black(Info_rb info)
     return node;
 }
 
-void deallocate_red_black_tree(Red_Black_Tree *root) 
+void deallocate_red_black_tree(Red_black_tree *root) 
 {
     if (root) 
     {
@@ -30,23 +30,34 @@ void deallocate_red_black_tree(Red_Black_Tree *root)
 }
 
 
-Color color(Red_Black_Tree *root) 
+Color color(Red_black_tree *root) 
 {
-    return (root == NULL) ? BLACK : root->color;
+    Color clr;
+
+    if(root == NULL)
+        clr = BLACK;
+    else
+        clr = root->color;
+
+    return clr;
 }
 
-bool is_red(Red_Black_Tree *node) 
+bool is_red(Red_black_tree *node) 
 {
     //////////////////////////////////////////
-    return node != NULL && node->color == RED;
+    bool red = false;
+    if(node)
+        ((*node).color == RED) ? (red = true) : red;
+
+    return red;
     //////////////////////////////////////////
 }
 
-void rotate_left(Red_Black_Tree **root) 
+void rotate_left(Red_black_tree **root) 
 {
     if (*root && (*root)->right) 
     {
-        Red_Black_Tree *new_root = (*root)->right;
+        Red_black_tree *new_root = (*root)->right;
 
         (*root)->right = new_root->left; 
         new_root->left = *root;         
@@ -59,11 +70,11 @@ void rotate_left(Red_Black_Tree **root)
 }
 
 
-void rotate_right(Red_Black_Tree **root) 
+void rotate_right(Red_black_tree **root) 
 {
     if (*root && (*root)->left) 
     {
-        Red_Black_Tree *new_root = (*root)->left;
+        Red_black_tree *new_root = (*root)->left;
 
         (*root)->left = new_root->right; 
         new_root->right = *root;        
@@ -76,32 +87,32 @@ void rotate_right(Red_Black_Tree **root)
 }
 
 
-void swap_color(Red_Black_Tree *node) 
+void swap_color(Red_black_tree **node) 
 {
-    if (node) 
+    if (*node) 
     {
-        node->color = !node->color; 
-        if (node->left) 
-            node->left->color = !node->left->color;
-        if (node->right) 
-            node->right->color = !node->right->color; 
+        (*node)->color = !(*node)->color; 
+        if ((*node)->left) 
+            (*node)->left->color = !(*node)->left->color;
+        if ((*node)->right) 
+            (*node)->right->color = !(*node)->right->color; 
     }
 }
 
-Red_Black_Tree *balance(Red_Black_Tree *node) 
+Red_black_tree *balance(Red_black_tree *node) 
 {
     if (is_red(node->right) && !is_red(node->left)) 
         rotate_left(&node);
     if (is_red(node->left) && is_red(node->left->left)) 
         rotate_right(&node);
     if (is_red(node->left) && is_red(node->right)) 
-        swap_color(node);
+        swap_color(&node);
 
     return node;
 }
 
 
-Red_Black_Tree *insert_rb(Red_Black_Tree *root, Info_rb info) 
+Red_black_tree *insert_rb(Red_black_tree *root, Info_rb info) 
 {
     if (root == NULL) 
         return allocate_red_black(info);
@@ -115,45 +126,47 @@ Red_Black_Tree *insert_rb(Red_Black_Tree *root, Info_rb info)
 }
 
 
-Red_Black_Tree *register_rb(Red_Black_Tree *root, Info_rb info) 
+Red_black_tree *register_rb(Red_black_tree *root, Info_rb info) 
 {
     root = insert_rb(root, info);
-    root->color = BLACK;  
+    if(root)
+        root->color = BLACK;  
+
     return root;
 }
 
-void move_left(Red_Black_Tree **node) 
+void move_left(Red_black_tree **node) 
 {
     if (*node) 
     {
-        swap_color(*node); 
+        swap_color(node); 
 
         if ((*node)->right && is_red((*node)->right->left)) 
         {
             rotate_right(&((*node)->right)); 
             rotate_left(node);              
-            swap_color(*node);             
+            swap_color(node);             
         }
     }
 }
 
 
-void move_right(Red_Black_Tree **node) 
+void move_right(Red_black_tree **node) 
 {
     if (*node) 
     {
-        swap_color(*node); 
+        swap_color(node); 
 
         if ((*node)->left && is_red((*node)->left->left))
         {
             rotate_right(node);  
-            swap_color(*node);   
+            swap_color(node);   
         }
     }
 }
 
 
-Red_Black_Tree *find_min(Red_Black_Tree *root) 
+Red_black_tree *find_min(Red_black_tree *root) 
 {
     while (root && root->left) 
         root = root->left;
@@ -161,7 +174,7 @@ Red_Black_Tree *find_min(Red_Black_Tree *root)
     return root;
 }
 
-void remove_min(Red_Black_Tree **root) 
+void remove_min(Red_black_tree **root) 
 {
     if (*root) 
     {
@@ -172,7 +185,8 @@ void remove_min(Red_Black_Tree **root)
         } 
         else 
         {
-            if (!is_red((*root)->left) && !is_red((*root)->left->left)) 
+            if ((*root)->left &&
+            !is_red((*root)->left) && !is_red((*root)->left->left)) 
                 move_left(root);  
             
             remove_min(&((*root)->left));  
@@ -183,7 +197,7 @@ void remove_min(Red_Black_Tree **root)
 }
 
 
-bool remove_node(Red_Black_Tree **root, const char *word) 
+bool remove_node(Red_black_tree **root, const char *word) 
 {
     bool found = false;
 
@@ -198,28 +212,28 @@ bool remove_node(Red_Black_Tree **root, const char *word)
         } 
         else 
         {
-            if (is_red((*root)->left)) 
+            if ((*root)->left && is_red((*root)->left)) 
                 rotate_right(root);
 
-            if (strcmp(word, (*root)->info.br_word) == 0) 
+            if (strcmp(word, (*root)->info.br_word) == 0)
             {
-                found = true;
-
-                if ((*root)->right == NULL) 
+                if((*root)->right == NULL)
                 {
+                    found = true;
+
                     free(*root);  
                     *root = NULL;
-                } 
-                else 
-                {
-                    Red_Black_Tree *min = find_min((*root)->right);
-                    (*root)->info = min->info;  
-                    remove_min(&((*root)->right));  
                 }
-            } 
+                else
+                {
+                    Red_black_tree *small = find_min((*root)->right);
+                    (*root)->info = small->info;
+                    remove_min(&(*root)->right);
+                }
+            }
             else 
             {
-                if (!is_red((*root)->right) && !is_red((*root)->right->left)) 
+                if ((*root)->right && color((*root)->right) == BLACK && color((*root)->right->left) == BLACK) 
                     move_right(root);
 
                 found = remove_node(&((*root)->right), word);
@@ -233,7 +247,7 @@ bool remove_node(Red_Black_Tree **root, const char *word)
     return found;
 }
 
-bool remove_in_tree(Red_Black_Tree **root, const char *word) 
+bool remove_in_tree(Red_black_tree **root, const char *word) 
 {
     bool result = remove_node(root, word);
 

@@ -18,12 +18,12 @@ typedef struct Info_rb {
     int unit;          // Unidade associada
 } Info_rb;
 
-typedef struct Red_Black_Tree {
+typedef struct Red_black_tree {
     Info_rb info;                  // Informações da palavra
     Color color;                   // Cor do nó (Vermelho ou Preto)
-    struct Red_Black_Tree *left;   // Ponteiro para o filho esquerdo
-    struct Red_Black_Tree *right;  // Ponteiro para o filho direito
-} Red_Black_Tree;
+    struct Red_black_tree *left;   // Ponteiro para o filho esquerdo
+    struct Red_black_tree *right;  // Ponteiro para o filho direito
+} Red_black_tree;
 
 // ============================
 // Funções de desalocação
@@ -33,7 +33,7 @@ typedef struct Red_Black_Tree {
  * Desaloca toda a árvore Rubro-Negra.
  * @param root: Ponteiro para a raiz da árvore.
  */
-void deallocate_red_black_tree(Red_Black_Tree *root);
+void deallocate_red_black_tree(Red_black_tree *root);
 
 // ============================
 // Funções auxiliares
@@ -44,32 +44,32 @@ void deallocate_red_black_tree(Red_Black_Tree *root);
  * @param H: Ponteiro para o nó.
  * @return Color (RED ou BLACK).
  */
-Color color(Red_Black_Tree *H);
+Color color(Red_black_tree *H);
 
 /**
  * Verifica se um nó é vermelho.
  * @param node: Ponteiro para o nó.
  * @return true se for vermelho, false caso contrário.
  */
-bool is_red(Red_Black_Tree *node);
+bool is_red(Red_black_tree *node);
 
 /**
  * Rotação à esquerda para manter o balanceamento.
  * @param root: Ponteiro para o nó desbalanceado.
  */
-void rotate_left(Red_Black_Tree **root);
+void rotate_left(Red_black_tree **root);
 
 /**
  * Rotação à direita para manter o balanceamento.
  * @param root: Ponteiro para o nó desbalanceado.
  */
-void rotate_right(Red_Black_Tree **root);
+void rotate_right(Red_black_tree **root);
 
 /**
  * Troca as cores de um nó e seus filhos.
  * @param H: Ponteiro para o nó cuja cor será trocada.
  */
-void swap_color(Red_Black_Tree *H);
+void swap_color(Red_black_tree **H);
 
 // ============================
 // Funções de inserção
@@ -81,7 +81,7 @@ void swap_color(Red_Black_Tree *H);
  * @param info: Informações a serem inseridas.
  * @return Ponteiro para a raiz balanceada.
  */
-Red_Black_Tree *insert_rb(Red_Black_Tree *node, Info_rb info);
+Red_black_tree *insert_rb(Red_black_tree *node, Info_rb info);
 
 /**
  * Insere e ajusta a raiz para garantir que ela seja preta.
@@ -89,7 +89,7 @@ Red_Black_Tree *insert_rb(Red_Black_Tree *node, Info_rb info);
  * @param info: Informações a serem inseridas.
  * @return Ponteiro para a nova raiz ajustada.
  */
-Red_Black_Tree* register_rb(Red_Black_Tree *root, Info_rb info);
+Red_black_tree* register_rb(Red_black_tree *root, Info_rb info);
 
 // ============================
 // Funções auxiliares para remoção
@@ -100,25 +100,25 @@ Red_Black_Tree* register_rb(Red_Black_Tree *root, Info_rb info);
  * @param root: Ponteiro para a raiz da subárvore.
  * @return Ponteiro para o nó com o menor valor.
  */
-Red_Black_Tree* find_min(Red_Black_Tree *root);
+Red_black_tree* find_min(Red_black_tree *root);
 
 /**
  * Move a cor vermelha para a subárvore esquerda.
  * @param H: Ponteiro para o nó atual.
  */
-void move_left(Red_Black_Tree **H);
+void move_left(Red_black_tree **H);
 
 /**
  * Move a cor vermelha para a subárvore direita.
  * @param H: Ponteiro para o nó atual.
  */
-void move_right(Red_Black_Tree **H);
+void move_right(Red_black_tree **H);
 
 /**
  * Remove o menor valor de uma subárvore.
  * @param H: Ponteiro para a raiz da subárvore.
  */
-void remove_min(Red_Black_Tree **H);
+void remove_min(Red_black_tree **H);
 
 // ============================
 // Funções de balanceamento e remoção
@@ -129,7 +129,7 @@ void remove_min(Red_Black_Tree **H);
  * @param node: Ponteiro para o nó atual.
  * @return Ponteiro para o nó balanceado.
  */
-Red_Black_Tree *balance(Red_Black_Tree *node);
+Red_black_tree *balance(Red_black_tree *node);
 
 /**
  * Remove um nó específico da árvore Rubro-Negra.
@@ -137,7 +137,7 @@ Red_Black_Tree *balance(Red_Black_Tree *node);
  * @param word: Palavra a ser removida.
  * @return true se a remoção for bem-sucedida, false caso contrário.
  */
-bool remove_node(Red_Black_Tree **H, const char *word);
+bool remove_node(Red_black_tree **H, const char *word);
 
 /**
  * Remove uma palavra da árvore Rubro-Negra e ajusta a raiz se necessário.
@@ -145,6 +145,6 @@ bool remove_node(Red_Black_Tree **H, const char *word);
  * @param word: Palavra a ser removida.
  * @return true se a remoção for bem-sucedida, false caso contrário.
  */
-bool remove_in_tree(Red_Black_Tree **root, const char *word);
+bool remove_in_tree(Red_black_tree **root, const char *word);
 
 #endif // RED_BLACK_TREE_H

@@ -27,4 +27,4 @@ gcc -g utils.o redblack.o main.o -o ../bin/$OUT
 
 rm *.o
 
-../bin/$OUT
+gdb ../bin/$OUT

@@ -1,7 +1,7 @@
 #include "../src/trees/red_black_tree/red_black_tree.h"
 
 // Função auxiliar para imprimir a árvore (apenas para depuração)
-void printTree(Red_Black_Tree *root, int depth) {
+void printTree(Red_black_tree *root, int depth) {
     if (root == NULL) {
         return;
     }
@@ -15,17 +15,19 @@ void printTree(Red_Black_Tree *root, int depth) {
 
 // Função principal de teste
 int main() {
-    Red_Black_Tree *root = NULL;
+    Red_black_tree *root = NULL;
 
     // Dados de teste para inserção
     Info_rb words[] = {
-        {"apple", 1},
-        {"banana", 2},
-        {"cherry", 3},
-        {"date", 4},
-        {"elderberry", 5},
-        {"fig", 6},
-        {"grape", 7}
+        {"abobora", 1},
+        {"cachorro", 2},
+        {"papagaio", 3},
+        {"ola", 4},
+        {"zebra", 5},
+        {"casa", 6},
+        {"pera", 7},
+        {"uva", 7},
+        {"gato", 7}
     };
     int numWords = sizeof(words) / sizeof(words[0]);
 
@@ -41,14 +43,14 @@ int main() {
     printTree(root, 0);
 
     // Teste: Remoção
-    printf("\nRemovendo palavras da árvore Rubro-Negra:\n");
-    for (int i = 0; i < numWords - 2; i++) {
-        if (remove_in_tree(&root, words[i].br_word)) {
-            printf("Removido: %s\n", words[i].br_word);
-        } else {
-            printf("Falha ao remover: %s\n", words[i].br_word);
-        }
-    }
+    remove_in_tree(&root, words[8].br_word);
+
+    // Imprime a árvore após remoção
+    printf("\nÁrvore após remoções:\n");
+    printTree(root, 0);
+
+    // Teste: Remoção
+    remove_in_tree(&root, words[2].br_word);
 
     // Imprime a árvore após remoção
     printf("\nÁrvore após remoções:\n");
