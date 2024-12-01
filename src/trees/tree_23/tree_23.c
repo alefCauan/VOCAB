@@ -546,17 +546,33 @@ void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin)
 		remove_eng_word(&(*root)->mid, info_bin);
 		remove_eng_word(&(*root)->right, info_bin);
 
+		char normalized_info1[256];
+		strcpy(normalized_info1, (*root)->info1.eng_words->info.eng_word);
+		trim_string(normalized_info1);
+		strcpy((*root)->info1.eng_words->info.eng_word, normalized_info1);
+
 		removed = remove_eng_word_bin(&(*root)->info1.eng_words, info_bin);
 
 		if (removed && is_binary_tree_empty((*root)->info1.eng_words)) 
+		{
+			printf("Entrei 1\n");
 			remove_23(NULL, root, (*root)->info1);
+		}
 
 		if (!removed && (*root)->two_info) 
 		{
+			char normalized_info2[256];
+			strcpy(normalized_info2, (*root)->info2.eng_words->info.eng_word);
+			trim_string(normalized_info2);
+			strcpy((*root)->info2.eng_words->info.eng_word, normalized_info2);
+
 			removed = remove_eng_word_bin(&(*root)->info2.eng_words, info_bin);
 
 			if (removed && is_binary_tree_empty((*root)->info2.eng_words)) 
+			{
+				printf("Entrei 2\n");
 				remove_23(NULL, root, (*root)->info2);
+			}
 		}
 	}
 

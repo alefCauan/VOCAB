@@ -75,7 +75,7 @@ bool is_binary_tree_empty(Binary_tree *root);
 /*
 (iii)informar uma palavra em inglês e e a unidade a qual a mesma pertence remove-la das árvores binárias
 das quais ela pertence. Caso ela seja a única palavra em uma das árvores binárias, remover também da
-árvore 2-3; []
+árvore 2-3; [x]
 */
 void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin);
 

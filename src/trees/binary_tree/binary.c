@@ -134,7 +134,7 @@ bool remove_eng_word_bin(Binary_tree **root, Info_bin info_bin)
     bool result = true;
 
     // Procura o nó a ser removido
-    while (current != NULL && strcmp(current->info.eng_word, info_bin.eng_word) != 0) 
+    while (current != NULL && strcmp(info_bin.eng_word, current->info.eng_word) != 0) 
     {
         parent = current;
         if (strcmp(info_bin.eng_word, current->info.eng_word) > 0)
