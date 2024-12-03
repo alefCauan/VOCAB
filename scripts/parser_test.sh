@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SRC_MAIN="../tests/parser_test.c"
+SRC_RB="../src/trees/red_black_tree/red_black_tree.c"
 SRC_23="../src/trees/binary_tree/binary.c"
 SRC_BIN="../src/trees/tree_23/tree_23.c"
 SRC_PARSER="../src/parser/parser.c"
@@ -10,6 +11,7 @@ OUT="parser_test"
 # Compilar os arquivos .c em .o
 gcc -g -c $SRC_BIN -o binary.o
 gcc -g -c $SRC_23 -I../src/trees/binary_tree -o tree_23.o
+gcc -g -c $SRC_RB -I../src/trees/binary_tree -o red_black.o
 gcc -g -c $SRC_UTILS -o utils.o
 gcc -g -c $SRC_PARSER -o parser.o
 gcc -g -c $SRC_MAIN -o main.o
@@ -25,6 +27,11 @@ if [ ! -f "$SRC_23" ]; then
     exit 1
 fi
 
+if [ ! -f "$SRC_RB" ]; then
+    echo "Erro: Arquivo $SRC_RB não encontrado!"
+    exit 1
+fi
+
 if [ ! -f "$SRC_UTILS" ]; then
     echo "Erro: Arquivo $SRC_UTILS não encontrado!"
     exit 1
@@ -34,13 +41,13 @@ if [ ! -f "$SRC_PARSER" ]; then
     echo "Erro: Arquivo $SRC_PARSER não encontrado!"
     exit 1
 fi
-
+-I../src/trees/binary_tree
 if [ ! -f "$SRC_MAIN" ]; then
     echo "Erro: Arquivo $SRC_MAIN não encontrado!"
     exit 1
 fi
 
-gcc -g  binary.o tree_23.o utils.o parser.o main.o -o ../bin/$OUT 
+gcc -g  binary.o tree_23.o red_black.o utils.o parser.o main.o -o ../bin/$OUT 
 
 rm *.o
 

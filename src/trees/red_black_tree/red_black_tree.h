@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "../binary_tree/binary.h"
 
 // Estrutura da árvore Rubro-Negra
 typedef enum {
@@ -14,6 +15,7 @@ typedef enum {
 
 
 typedef struct Info_rb {
+    Binary_tree *eng_words;
     char br_word[256]; // Palavra em português
     int unit;          // Unidade associada
 } Info_rb;
@@ -94,6 +96,8 @@ Red_black_tree* register_rb(Red_black_tree *root, Info_rb info);
 // ============================
 // Funções auxiliares para remoção
 // ============================
+
+Red_black_tree *search_rb(Red_black_tree *root, const char *br_word);
 
 /**
  * Encontra o menor valor na subárvore.

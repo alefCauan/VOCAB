@@ -7,7 +7,7 @@ Zwei_drei_tree *alloc_tree(Info info, Zwei_drei_tree *left, Zwei_drei_tree *mid,
 	node = (Zwei_drei_tree *)malloc(sizeof(Zwei_drei_tree));
 
 	(*node).info1 = info;
-	(*node).info1 = info;
+	// (*node).info2 = info;
 	
 	(*node).two_info = false;
 	(*node).left = left;
@@ -417,28 +417,38 @@ void print_bin_tree(Zwei_drei_tree *root, int level)
 
 Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word, int *info) 
 {
-    if (root == NULL) 
-        return NULL;
+	Zwei_drei_tree *result;
+	result = NULL;
 
-    // Verifica o primeiro item (info1)
-    if (strcmp(br_word, root->info1.br_word) == 0) {
-        *info = 1;
-        return root;
-    }
 
-    // Verifica o segundo item (info2), se existir
-    if (root->two_info && strcmp(br_word, root->info2.br_word) == 0) {
-        *info = 2;
-        return root;
-    }
+    if (root != NULL) 
+	{
+		// Verifica o primeiro item (info1)
+		if (strcmp(br_word, root->info1.br_word) == 0) 
+		{
+			*info = 1;
+			result = root;
+		}
+		// Verifica o segundo item (info2), se existir
+		else if (root->two_info && strcmp(br_word, root->info2.br_word) == 0) 
+		{
+			*info = 2;
+			result = root;
+		}
+		else
+		{
+			if (strcmp(br_word, root->info1.br_word) < 0) 
+				result = search_23_tree(root->left, br_word, info);  
+			else if (!root->two_info || strcmp(br_word, root->info2.br_word) < 0) 
+				result = search_23_tree(root->mid, br_word, info);  
+			else 
+				result = search_23_tree(root->right, br_word, info); 
+		}
 
-    // Decide a próxima subárvore a buscar
-    if (strcmp(br_word, root->info1.br_word) < 0) 
-        return search_23_tree(root->left, br_word, info);  // Subárvore esquerda
-    else if (!root->two_info || strcmp(br_word, root->info2.br_word) < 0) 
-        return search_23_tree(root->mid, br_word, info);   // Subárvore do meio
-    else 
-        return search_23_tree(root->right, br_word, info); // Subárvore direita
+	}
+    
+	return result;
+
 }
 
 

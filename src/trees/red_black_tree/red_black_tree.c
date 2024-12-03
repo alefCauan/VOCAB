@@ -12,6 +12,7 @@ Red_black_tree *allocate_red_black(Info_rb info)
     node->info.unit = info.unit;
 
     node->color = RED;
+    node->info.eng_words = NULL;
     node->left = NULL;
     node->right = NULL;
 
@@ -114,9 +115,10 @@ Red_black_tree *balance(Red_black_tree *node)
 
 Red_black_tree *insert_rb(Red_black_tree *root, Info_rb info) 
 {
-    if (root == NULL) 
-        return allocate_red_black(info);
+    Red_black_tree *result;
 
+    if (root == NULL) 
+        result =  allocate_red_black(info);
     if (strcmp(info.br_word, root->info.br_word) < 0)
         root->left = insert_rb(root->left, info);
     else if (strcmp(info.br_word, root->info.br_word) > 0)
@@ -124,7 +126,6 @@ Red_black_tree *insert_rb(Red_black_tree *root, Info_rb info)
 
     return balance(root);
 }
-
 
 Red_black_tree *register_rb(Red_black_tree *root, Info_rb info) 
 {
@@ -164,6 +165,26 @@ void move_right(Red_black_tree **node)
         }
     }
 }
+
+
+Red_black_tree *search_rb(Red_black_tree *root, const char *br_word) 
+{
+	Red_black_tree *result;
+	result = NULL;
+
+    if (root != NULL) 
+	{
+        if (strcmp(br_word, root->info.br_word) == 0) 
+            result = root;
+        else if (strcmp(br_word, root->info.br_word) < 0) 
+            result = search_rb(root->left, br_word);  
+        else if (strcmp(br_word, root->info.br_word) > 0) 
+            result = search_rb(root->right, br_word);  
+	}
+    
+	return result;
+}
+
 
 
 Red_black_tree *find_min(Red_black_tree *root) 
