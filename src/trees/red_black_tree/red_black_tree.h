@@ -149,6 +149,17 @@ bool remove_node(Red_black_tree **H, const char *word);
  * @param word: Palavra a ser removida.
  * @return true se a remoção for bem-sucedida, false caso contrário.
  */
-bool remove_in_tree(Red_black_tree **root, const char *word);
+bool remove_rb(Red_black_tree **root, const char *word);
+
+
+void show_port_and_eng_words_rb(Red_black_tree *root, int unit);
+
+void show_eng_words_rb(Red_black_tree *root, const char *br_word);
+
+void remove_eng_word_rb(Red_black_tree **root, Info_bin info_bin);
+
+void remove_all_eng_words_rb(Red_black_tree **root, Binary_tree *eng_words);
+
+void remove_port_word_rb(Red_black_tree **root, Info_rb info);
 
 #endif // RED_BLACK_TREE_H

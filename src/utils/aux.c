@@ -50,3 +50,22 @@ bool validf_answer(float min, float max, float answer)
     
     return result;
 }
+
+
+void trim_string(char *str) 
+{
+    char *start = str;
+    char *end = str + strlen(str) - 1;
+
+    // Remove espaços à esquerda
+    while (isspace((unsigned char)*start)) start++;
+
+    // Remove espaços à direita
+    while (end > start && isspace((unsigned char)*end)) end--;
+
+    // Ajusta o final da string
+    *(end + 1) = '\0';
+
+    // Move a string normalizada para o início
+    if (start != str) memmove(str, start, end - start + 2);
+}

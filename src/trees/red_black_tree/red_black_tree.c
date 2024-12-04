@@ -268,7 +268,7 @@ bool remove_node(Red_black_tree **root, const char *word)
     return found;
 }
 
-bool remove_in_tree(Red_black_tree **root, const char *word) 
+bool remove_rb(Red_black_tree **root, const char *word) 
 {
     bool result = remove_node(root, word);
 
@@ -278,3 +278,96 @@ bool remove_in_tree(Red_black_tree **root, const char *word)
     return result;
 }
 
+
+void show_port_and_eng_words_rb(Red_black_tree *root, int unit)
+{
+	if(root)
+	{
+		if (root->info.unit == unit)
+		{
+			printf("PORTUGUES: %s\n", root->info.br_word);
+			printf("  Traduções em inglês:");
+            show_all_eng_words(root->info.eng_words);
+            printf("\n");
+		}
+	
+		show_port_and_eng_words_rb(root->left, unit);
+		show_port_and_eng_words_rb(root->right, unit);
+	}
+}
+
+void show_eng_words_rb(Red_black_tree *root, const char *br_word) 
+{
+    if (root) 
+	{
+        // Normaliza as strings antes da comparação
+        char normalized_br_word[256];
+        strcpy(normalized_br_word, br_word);
+        trim_string(normalized_br_word);
+
+		char normalized_info[256];
+        strcpy(normalized_info, root->info.br_word);
+        trim_string(normalized_info);
+
+        if (strcmp(normalized_br_word, normalized_info) == 0) 
+		{
+            show_all_eng_words(root->info.eng_words);
+            printf("\n");
+        }
+
+        show_eng_words_rb(root->left, br_word);
+        show_eng_words_rb(root->right, br_word);
+    }
+}
+
+void remove_eng_word_rb(Red_black_tree **root, Info_bin info_bin) 
+{
+    if (*root)
+	{
+		bool removed = false;
+
+		remove_eng_word_rb(&(*root)->left, info_bin);
+		remove_eng_word_rb(&(*root)->right, info_bin);
+
+		char normalized_info[256];
+		strcpy(normalized_info, (*root)->info.eng_words->info.eng_word);
+		trim_string(normalized_info);
+		strcpy((*root)->info.eng_words->info.eng_word, normalized_info);
+
+		removed = remove_eng_word_bin(&(*root)->info.eng_words, info_bin);
+
+		if (removed && is_binary_tree_empty((*root)->info.eng_words)) 
+			remove_rb(root, (*root)->info.br_word);
+	}
+
+}
+
+void remove_all_eng_words_rb(Red_black_tree **root, Binary_tree *eng_words)
+{
+	if(eng_words)
+	{
+		remove_all_eng_words_rb(root, eng_words->left);
+		remove_all_eng_words_rb(root, eng_words->right);
+
+		remove_eng_word_rb(root, eng_words->info);
+	}
+}
+
+void remove_port_word_rb(Red_black_tree **root, Info_rb info) 
+{
+    if (*root)
+	{
+		if (strcmp(info.br_word, (*root)->info.br_word) < 0) 
+			remove_port_word_rb(&(*root)->left, info);
+		else if (strcmp(info.br_word, (*root)->info.br_word) > 0) 
+			remove_port_word_rb(&(*root)->right, info);
+		else 
+		{
+			// Encontrou o nó correspondente para remoção
+			if (strcmp(info.br_word, (*root)->info.br_word) == 0) 
+				remove_all_eng_words_rb(root, (*root)->info.eng_words);
+			
+            remove_rb(root, (*root)->info.br_word);
+		}
+	} 
+}

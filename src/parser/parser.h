@@ -21,5 +21,8 @@ void scan_file_line(Zwei_drei_tree **root);
 
 void insert_vocabulary(Zwei_drei_tree **root, char *translation, char *english_word, int unit);
 
+void scan_file_line_rb(Red_black_tree **root);
+
+void insert_vocabulary_rb(Red_black_tree **root, char *translation, char *english_word, int unit);
 
 #endif

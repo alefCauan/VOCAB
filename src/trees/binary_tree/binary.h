@@ -46,4 +46,6 @@ void print_binary_tree(Binary_tree *root, int level);
 
 void show_all_eng_words(Binary_tree *root);
 
+bool is_binary_tree_empty(Binary_tree *root);
+
 #endif

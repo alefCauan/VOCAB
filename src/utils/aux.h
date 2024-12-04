@@ -23,4 +23,6 @@ bool valid_answer(int min, int max, int answer);
 // (float) valida uma resposta dentro de um certo limite
 bool validf_answer(float min, float max, float answer);
 
+void trim_string(char *str);
+
 #endif // AUX_H

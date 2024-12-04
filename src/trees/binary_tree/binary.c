@@ -188,3 +188,5 @@ void show_all_eng_words(Binary_tree *root)
         show_all_eng_words(root->right);
     }
 }
+
+bool is_binary_tree_empty(Binary_tree *root) { return root == NULL; }

@@ -478,25 +478,6 @@ void show_port_and_eng_words(Zwei_drei_tree *root, int unit)
 	}
 }
 
-// Remove espaços extras e caracteres invisíveis das extremidades
-void trim_string(char *str) 
-{
-    char *start = str;
-    char *end = str + strlen(str) - 1;
-
-    // Remove espaços à esquerda
-    while (isspace((unsigned char)*start)) start++;
-
-    // Remove espaços à direita
-    while (end > start && isspace((unsigned char)*end)) end--;
-
-    // Ajusta o final da string
-    *(end + 1) = '\0';
-
-    // Move a string normalizada para o início
-    if (start != str) memmove(str, start, end - start + 2);
-}
-
 void show_eng_words(Zwei_drei_tree *root, const char *br_word) 
 {
     if (root) 
@@ -543,8 +524,6 @@ void show_eng_words(Zwei_drei_tree *root, const char *br_word)
     }
 }
 
-// Função para verificar se a árvore binária está vazia
-bool is_binary_tree_empty(Binary_tree *root) { return root == NULL; }
 
 void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin) 
 {
