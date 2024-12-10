@@ -2,8 +2,6 @@
 
 int main()
 {
-    // FILE *parser = _open_file("vocabulary.txt", "r");
-    // fclose(parser);
     Zwei_drei_tree *root;
     root = NULL;
     scan_file_line(&root);

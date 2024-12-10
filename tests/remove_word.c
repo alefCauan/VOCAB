@@ -7,21 +7,27 @@ int main()
     scan_file_line(&root);
     // print_tree(root, 0);
     printf("\n----------------------------------------------------------------------------------------\n");
-    Info_bin bin;
+    // Info_bin bin;
 
-    setbuf(stdin, NULL);
-    scanf("%[^\n]", bin.eng_word);
-    remove_eng_word(&root, bin);
-    print_tree(root, 0);
+    // setbuf(stdin, NULL);
+    // scanf("%[^\n]", bin.eng_word);
+    // remove_eng_word(&root, bin);
+    // print_tree(root, 0);
     printf("\n----------------------------------------------------------------------------------------\n");
     // setbuf(stdin, NULL);
     // scanf("%[^\n]", bin.eng_word);
     // remove_eng_word(&root, bin);
     // print_tree(root, 0);
     printf("\n----------------------------------------------------------------------------------------\n");
-    // Info info = {.br_word = "dispositivo", .unit = 1, .eng_words = NULL};
-    // remove_port_word(&root, info);
-    // print_tree(root, 0);
+    char teste[256];
+    setbuf(stdin, NULL);
+    scanf("%[^\n]", teste);
+    Info info;
+    strcpy(info.br_word, teste);
+    info.eng_words = NULL;
+    info.unit = 1;
+    remove_port_word(&root, info);
+    print_tree(root, 0);
 
 
     deallocate_tree(root);

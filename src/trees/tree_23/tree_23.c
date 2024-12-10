@@ -168,7 +168,9 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 				{
 					Info rise1;
 					Zwei_drei_tree *novo;
+
 					novo = break_node(root, *rise, &rise1, b_node);
+
 					if (Dad == NULL)
 					{
 						Zwei_drei_tree *no;
@@ -531,15 +533,6 @@ void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin)
 	{
 		bool removed = false;
 
-		remove_eng_word(&(*root)->left, info_bin);
-		remove_eng_word(&(*root)->mid, info_bin);
-		remove_eng_word(&(*root)->right, info_bin);
-
-		char normalized_info1[256];
-		strcpy(normalized_info1, (*root)->info1.eng_words->info.eng_word);
-		trim_string(normalized_info1);
-		strcpy((*root)->info1.eng_words->info.eng_word, normalized_info1);
-
 		removed = remove_eng_word_bin(&(*root)->info1.eng_words, info_bin);
 
 		if (removed && is_binary_tree_empty((*root)->info1.eng_words)) 
@@ -550,11 +543,6 @@ void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin)
 
 		if (!removed && (*root)->two_info) 
 		{
-			char normalized_info2[256];
-			strcpy(normalized_info2, (*root)->info2.eng_words->info.eng_word);
-			trim_string(normalized_info2);
-			strcpy((*root)->info2.eng_words->info.eng_word, normalized_info2);
-
 			removed = remove_eng_word_bin(&(*root)->info2.eng_words, info_bin);
 
 			if (removed && is_binary_tree_empty((*root)->info2.eng_words)) 
@@ -563,6 +551,11 @@ void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin)
 				remove_23(NULL, root, (*root)->info2);
 			}
 		}
+
+		remove_eng_word(&(*root)->left, info_bin);
+		remove_eng_word(&(*root)->mid, info_bin);
+		remove_eng_word(&(*root)->right, info_bin);
+
 	}
 
 }
@@ -596,7 +589,6 @@ void remove_port_word(Zwei_drei_tree **root, Info info)
 			else if ((*root)->two_info && strcmp(info.br_word, (*root)->info2.br_word) == 0) 
 				remove_all_eng_words(root, (*root)->info2.eng_words);
 			
-			Info rise;
 			remove_23(NULL, root, info);
 		}
 	} 

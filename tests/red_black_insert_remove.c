@@ -1,65 +1,64 @@
 #include "../src/trees/red_black_tree/red_black_tree.h"
 
-// Função auxiliar para imprimir a árvore (apenas para depuração)
-void printTree(Red_black_tree *root, int depth) {
-    if (root == NULL) {
-        return;
+// Função para criar e inicializar um Info_rb para teste
+Info_rb create_info_rb(const char *br_word, int unit, const char *translations[], int num_translations) {
+    Info_rb info;
+    info.eng_words = NULL;  // Inicializa a árvore binária de traduções
+
+    strncpy(info.br_word, br_word, sizeof(info.br_word));
+    info.unit = unit;
+
+    // Adiciona as traduções na árvore binária associada
+    for (int i = 0; i < num_translations; i++) {
+        Info_bin bin_info;
+        strncpy(bin_info.eng_word, translations[i], sizeof(bin_info.eng_word));
+        bin_info.unit = unit;
+
+        Binary_tree *new_node = allocate_binary(bin_info);
+        insert_bin(&(info.eng_words), new_node);  // Insere tradução na árvore binária
     }
-    printTree(root->right, depth + 1);
-    for (int i = 0; i < depth; i++) {
-        printf("   ");
-    }
-    printf("%s (%s)\n", root->info.br_word, root->color == RED ? "RED" : "BLACK");
-    printTree(root->left, depth + 1);
+
+    return info;
 }
 
-// Função principal de teste
-int main() {
-    Red_black_tree *root = NULL;
+// Função para imprimir as palavras e traduções na árvore Rubro-Negra
+void print_red_black_tree(Red_black_tree *root) 
+{
+    if (root) {
+        printf("Palavra (PT): %s, cor: %d\n", root->info.br_word, root->color);
+        printf("Traduções (EN): ");
+        print_binary_tree(root->info.eng_words, 0);  // Função para imprimir a árvore binária
+        printf("\n");
 
-    // Dados de teste para inserção
-    Info_rb words[] = {
-        {"abobora", 1},
-        {"cachorro", 2},
-        {"papagaio", 3},
-        {"ola", 4},
-        {"zebra", 5},
-        {"casa", 6},
-        {"pera", 7},
-        {"uva", 7},
-        {"gato", 7}
-    };
-    int numWords = sizeof(words) / sizeof(words[0]);
-
-    // Teste: Inserção
-    printf("Inserindo palavras na árvore Rubro-Negra:\n");
-    for (int i = 0; i < numWords; i++) {
-        root = register_rb(root, words[i]);
-        printf("Inserido: %s\n", words[i].br_word);
+        print_red_black_tree(root->left);
+        print_red_black_tree(root->right);
     }
+}
 
-    // Imprime a árvore após inserção
-    printf("\nÁrvore após inserções:\n");
-    printTree(root, 0);
+int main() {
+    // Inicializa a árvore Rubro-Negra
+    Red_black_tree *rb_root = NULL;
 
-    // Teste: Remoção
-    remove_in_tree(&root, words[8].br_word);
+    // Define palavras em português e suas traduções
+    const char *translations1[] = {"house", "home"};
+    const char *translations2[] = {"car", "automobile"};
+    const char *translations3[] = {"tree", "wood"};
+    const char *translations4[] = {"dog", "puppy"};
+    const char *translations5[] = {"apple", "fruit"};
 
-    // Imprime a árvore após remoção
-    printf("\nÁrvore após remoções:\n");
-    printTree(root, 0);
+    // Insere palavras em português com suas traduções
+    rb_root = register_rb(rb_root, create_info_rb("casa", 1, translations1, 2));
+    rb_root = register_rb(rb_root, create_info_rb("carro", 1, translations2, 2));
+    rb_root = register_rb(rb_root, create_info_rb("arvore", 1, translations3, 2));
+    rb_root = register_rb(rb_root, create_info_rb("cachorro", 1, translations4, 2));
+    rb_root = register_rb(rb_root, create_info_rb("maca", 1, translations5, 2));
 
-    // Teste: Remoção
-    remove_in_tree(&root, words[2].br_word);
+    // Imprime a árvore Rubro-Negra com as traduções
+    printf("Árvore Rubro-Negra após inserções:\n");
+    print_red_black_tree(rb_root);
 
-    // Imprime a árvore após remoção
-    printf("\nÁrvore após remoções:\n");
-    printTree(root, 0);
+    // Libera memória
+    deallocate_red_black_tree(rb_root);
 
-    // Desaloca a árvore
-    deallocate_red_black_tree(root);
-    root = NULL;
-
-    printf("\nÁrvore desalocada com sucesso.\n");
     return 0;
 }

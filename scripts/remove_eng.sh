@@ -13,7 +13,7 @@ gcc -g -c $SRC_23 -I../src/trees/binary_tree -o tree_23.o
 gcc -g -c $SRC_UTILS -o utils.o
 gcc -g -c $SRC_PARSER -o parser.o
 gcc -g -c $SRC_MAIN -o main.o
-
+dis
 # Verificação para garantir que os arquivos existem
 if [ ! -f "$SRC_BIN" ]; then
     echo "Erro: Arquivo $SRC_BIN não encontrado!"

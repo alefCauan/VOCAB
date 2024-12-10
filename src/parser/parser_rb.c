@@ -1,9 +1,6 @@
-#include "parser.h"
-#include "../trees/tree_23/tree_23.h"
-#include "../trees/red_black_tree/red_black_tree.h"
-#include "../utils/aux.h"
+#include "parser_rb.h"
 
-FILE *_open_file(const char *file_name, const char *type)
+FILE *_open_file_rb(const char *file_name, const char *type)
 {
     FILE *file = fopen(file_name, type);
     ASSERT_ALLOC(file, "open file");
@@ -11,10 +8,10 @@ FILE *_open_file(const char *file_name, const char *type)
     return file;
 }
 
-// Função principal de leitura do arquivo
-void scan_file_line(Zwei_drei_tree **root) 
+// Função principal de leitura do arquivo 
+void scan_file_line_rb(Red_black_tree **root) 
 {
-    FILE *parser = _open_file(PARSER_PATH, "r");
+    FILE *parser = _open_file_rb(PARSER_PATH, "r");
 
     char line[1024];
     int unit = 0;
@@ -43,7 +40,7 @@ void scan_file_line(Zwei_drei_tree **root)
                     strcpy(normalized_pt, translation);
                     trim_string(normalized_pt);
 
-                    insert_vocabulary(root, normalized_pt, normalized_eng, unit);
+                    insert_vocabulary_rb(root, normalized_pt, normalized_eng, unit);
                     translation = strtok(NULL, BR_TOKEN);
                 }
             }
@@ -54,31 +51,25 @@ void scan_file_line(Zwei_drei_tree **root)
 }
 
 // Função para inserir vocabulário na árvore
-void insert_vocabulary(Zwei_drei_tree **root, char *translation, char *english_word, int unit) 
+void insert_vocabulary_rb(Red_black_tree **root, char *translation, char *english_word, int unit) 
 {
-    int info = 1;
-    Zwei_drei_tree *result = search_23_tree(*root, translation, &info);
+    Red_black_tree *result = search_rb(*root, translation);
     Info_bin info_bin;
 
     info_bin.unit = unit;
     strcpy(info_bin.eng_word, english_word);
 
     if (result) 
+        register_bin(&result->info.eng_words, info_bin);
+    else 
     {
-        if (info == 1)
-            register_bin(&result->info1.eng_words, info_bin);
-        else if(info == 2)
-            register_bin(&result->info2.eng_words, info_bin);
-    } 
-    else
-    {
-        Info new_info, rise;
+        Info_rb new_info;
 
         strcpy(new_info.br_word, translation);
         new_info.unit = unit;
         new_info.eng_words = NULL;
 
         register_bin(&new_info.eng_words, info_bin);
-        insert_tree_23(NULL, root, new_info, &rise);
+        insert_rb(root, new_info);
     }
 }

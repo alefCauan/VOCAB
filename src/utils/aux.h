@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 #define RAISE_ERROR(message) (print_error(message))
 #define ASSERT_ALLOC(pointer, message) (check_allocation(pointer, message))
 

@@ -12,7 +12,7 @@ Red_black_tree *allocate_red_black(Info_rb info)
     node->info.unit = info.unit;
 
     node->color = RED;
-    node->info.eng_words = NULL;
+    node->info.eng_words = info.eng_words;
     node->left = NULL;
     node->right = NULL;
 
@@ -118,11 +118,17 @@ Red_black_tree *insert_rb(Red_black_tree *root, Info_rb info)
     Red_black_tree *result;
 
     if (root == NULL) 
-        result =  allocate_red_black(info);
-    if (strcmp(info.br_word, root->info.br_word) < 0)
-        root->left = insert_rb(root->left, info);
-    else if (strcmp(info.br_word, root->info.br_word) > 0)
-        root->right = insert_rb(root->right, info);
+        root = allocate_red_black(info);
+    else
+    {
+        if (strcmp(info.br_word, root->info.br_word) < 0)
+            root->left = insert_rb(root->left, info);
+        else if (strcmp(info.br_word, root->info.br_word) > 0)
+            root->right = insert_rb(root->right, info);
+        else
+            printf("TODO\n"); // TODO: INSERT BB
+    }
+        
 
     return balance(root);
 }
@@ -305,11 +311,7 @@ void show_eng_words_rb(Red_black_tree *root, const char *br_word)
         strcpy(normalized_br_word, br_word);
         trim_string(normalized_br_word);
 
-		char normalized_info[256];
-        strcpy(normalized_info, root->info.br_word);
-        trim_string(normalized_info);
-
-        if (strcmp(normalized_br_word, normalized_info) == 0) 
+        if (strcmp(normalized_br_word, root->info.br_word) == 0) 
 		{
             show_all_eng_words(root->info.eng_words);
             printf("\n");
@@ -330,9 +332,9 @@ void remove_eng_word_rb(Red_black_tree **root, Info_bin info_bin)
 		remove_eng_word_rb(&(*root)->right, info_bin);
 
 		char normalized_info[256];
-		strcpy(normalized_info, (*root)->info.eng_words->info.eng_word);
+		strcpy(normalized_info, info_bin.eng_word);
 		trim_string(normalized_info);
-		strcpy((*root)->info.eng_words->info.eng_word, normalized_info);
+		strcpy(info_bin.eng_word, normalized_info);
 
 		removed = remove_eng_word_bin(&(*root)->info.eng_words, info_bin);
 
