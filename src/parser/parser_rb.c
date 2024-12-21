@@ -70,6 +70,6 @@ void insert_vocabulary_rb(Red_black_tree **root, char *translation, char *englis
         new_info.eng_words = NULL;
 
         register_bin(&new_info.eng_words, info_bin);
-        insert_rb(root, new_info);
+        *root = insert_rb(*root, new_info);
     }
 }

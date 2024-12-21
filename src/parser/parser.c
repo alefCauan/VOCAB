@@ -1,6 +1,5 @@
 #include "parser.h"
 #include "../trees/tree_23/tree_23.h"
-#include "../trees/red_black_tree/red_black_tree.h"
 #include "../utils/aux.h"
 
 FILE *_open_file(const char *file_name, const char *type)

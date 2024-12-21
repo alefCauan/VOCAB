@@ -5,7 +5,7 @@ SRC_23="../src/trees/binary_tree/binary.c"
 SRC_BIN="../src/trees/tree_23/tree_23.c"
 SRC_PARSER="../src/parser/parser.c"
 SRC_UTILS="../src/utils/aux.c"
-OUT="parser_test"
+OUT="remove_word"
 
 # Compilar os arquivos .c em .o
 gcc -g -c $SRC_BIN -o binary.o
