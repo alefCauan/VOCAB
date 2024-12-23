@@ -208,3 +208,9 @@ void print_tree_in_order(Tree23 *root) {
         print_tree_in_order(root->right_child);
     }
 }
+
+// Função para concatenar nós adjacentes com o mesmo status
+void concatenate_adjacent_nodes(Tree23 *root) {
+    // TODO: CONCATENAÇÃO DOS NÓS COM A FUNCÇÃO DE REMOVER 
+}
+
