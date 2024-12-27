@@ -24,7 +24,7 @@ void add_nodes(Tree23 **root) {
 
     // Loop para cadastrar os demais nós
     while (end_block != LAST_BLOCK) {
-        printf("Informe o número do bloco final do próximo nó (ou -1 para encerrar): ");
+        printf("Informe o número do bloco final do próximo nó: ");
         scanf("%d", &end_block);
 
         // Atualiza o bloco inicial com base no último bloco final
