@@ -1,5 +1,6 @@
 #ifndef BLOCK23_H
 #define BLOCK23_H
+#define LAST_BLOCK 100
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -39,5 +40,7 @@ Tree23 *insert_tree_23(Tree23 *Dad, Tree23 **root, Info info, Info *rise);
 void print_tree_in_order(Tree23 *root);
 
 bool is_leaf(Tree23 *root);
+
+void concatenate_adjacent_nodes(Tree23 *root);
 
 #endif

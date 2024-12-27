@@ -61,34 +61,28 @@ void add_tree_23(Tree23 **root, Info info, Tree23 *b_node)
     (*root)->two_info = true; // Marca que o nó agora possui dois valores
 }
 
-Tree23 *break_node(Tree23 **root, Info info, Info *rise, Tree23 *b_node) 
-{
+Tree23 *break_node(Tree23 **root, Info info, Info *rise, Tree23 *b_node) {
     Tree23 *new_node;
 
-    // Divide o nó cheio em dois nós e retorna o novo nó criado
-    if (info.start_block < (*root)->info1.start_block) 
-    {
-        // O novo valor é o menor e deve ser promovido para o pai (info1 sobe)
+    if (info.start_block < (*root)->info1.start_block) {
+        // O novo valor é o menor e deve ser promovido para o pai
         *rise = (*root)->info1; // info1 é promovido
-        new_node = alloc_tree((*root)->info2, (*root)->middle_child, (*root)->right_child, NULL); // info2 e filhos vão para o novo nó
-        (*root)->info1 = info; // O novo valor se torna info1 no nó original
+        new_node = alloc_tree((*root)->info2, (*root)->middle_child, (*root)->right_child, NULL);
+        (*root)->info1 = info; // O novo valor se torna info1
         (*root)->middle_child = b_node; // O novo filho é atribuído ao meio
-    } 
-    else if ((*root)->two_info == false || info.start_block < (*root)->info2.start_block) 
-    {
-        // O novo valor está no meio e deve ser promovido para o pai
+    } else if (!(*root)->two_info || info.start_block < (*root)->info2.start_block) {
+        // O novo valor está no meio e deve ser promovido
         *rise = info; // O novo valor é promovido
-        new_node = alloc_tree((*root)->info2, b_node, (*root)->right_child, NULL); // info2 e o filho direito vão para o novo nó
-    } 
-    else 
-    {
-        // O novo valor é o maior e deve ser promovido para o pai (info2 sobe)
+        new_node = alloc_tree((*root)->info2, b_node, (*root)->right_child, NULL);
+    } else {
+        // O novo valor é o maior e deve ser promovido para o pai
         *rise = (*root)->info2; // info2 é promovido
-        new_node = alloc_tree(info, (*root)->right_child, b_node, NULL); // O novo valor e o filho direito vão para o novo nó
+        new_node = alloc_tree(info, (*root)->right_child, b_node, NULL);
     }
 
-    (*root)->two_info = false; // O nó original agora possui apenas um valor
-    (*root)->right_child = NULL;     // Remove o ponteiro para o filho direito
+    // Atualiza o nó atual para refletir a divisão
+    (*root)->two_info = false; // O nó original agora tem apenas um valor
+    (*root)->right_child = NULL; // Remove o filho direito (agora no novo nó)
 
     return new_node; // Retorna o novo nó criado
 }
@@ -208,3 +202,9 @@ void print_tree_in_order(Tree23 *root) {
         print_tree_in_order(root->right_child);
     }
 }
+
+// Função para concatenar nós adjacentes com o mesmo status
+void concatenate_adjacent_nodes(Tree23 *root) {
+    // TODO: CONCATENAÇÃO DOS NÓS COM A FUNCÇÃO DE REMOVER 
+}
+
