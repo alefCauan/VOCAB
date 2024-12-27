@@ -41,10 +41,10 @@ bool free_blocks(Tree23 *root, int start_block, int end_block) {
             root->info1.start_block = start_block;
             root->info1.end_block = end_block;
             root->info1.status = 'L';
-            Info rise; 
-            insert_tree_23(NULL, &root, left_info, &rise);
+            Info rise;
+            root = insert_tree_23(NULL, &root,left_info, &rise);
             printf("print");
-            insert_tree_23(NULL, &root, right_info, &rise);
+            root = insert_tree_23(NULL, &root, right_info, &rise);
         }
 
         // Concatenar nós adjacentes

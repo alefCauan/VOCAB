@@ -87,74 +87,96 @@ Tree23 *break_node(Tree23 **root, Info info, Info *rise, Tree23 *b_node) {
     return new_node; // Retorna o novo nó criado
 }
 
-Tree23 *insert_tree_23(Tree23 *Dad, Tree23 **root, Info info, Info *rise) {
+Tree23 *insert_tree_23(Tree23 *Dad, Tree23 **root, Info info, Info *rise)
+{
     Tree23 *b_node = NULL;
 
-    if (*root == NULL) {
+    if (*root == NULL)
+    {
         // Cria um novo nó caso a árvore esteja vazia
         *root = alloc_tree(info, NULL, NULL, NULL);
-        return NULL;
     }
-
-    if (is_leaf(*root)) {
-        // Caso o nó atual seja uma folha
-        if (!(*root)->two_info) {
-            // Adiciona diretamente se o nó tiver espaço
+    else if (is_leaf(*root))
+    {
+        // Caso o nó atual seja uma folha (não possui filhos)
+        if ((*root)->two_info == false)
+        {
+            // Caso o nó tenha espaço, adiciona o novo valor diretamente
             add_tree_23(root, info, b_node);
-            return NULL;
-        } else {
-            // Divide o nó cheio
-            Tree23 *new_node = break_node(root, info, rise, b_node);
+        }
+        else
+        {
+            // Caso o nó esteja cheio, realiza uma divisão (split)
+            Tree23 *new_node;
+            new_node = break_node(root, info, rise, b_node);
 
-            if (Dad == NULL) {
+            if (Dad == NULL)
+            {
                 // Se não houver pai, cria um novo nó raiz
                 Tree23 *parent = alloc_tree(*rise, *root, new_node, NULL);
-                *root = parent;
-                return NULL;
-            } else {
-                // Retorna o nó promovido para ser processado no nível superior
-                return new_node;
+                *root = parent; // A nova raiz se torna o nó atual
             }
-        }
-    }
-
-    // Caso o nó atual não seja folha
-    if (info.start_block < (*root)->info1.start_block) {
-        // Insere no filho esquerdo
-        b_node = insert_tree_23(*root, &((*root)->left_child), info, rise);
-    } else if (!(*root)->two_info || info.start_block < (*root)->info2.start_block) {
-        // Insere no filho do meio
-        b_node = insert_tree_23(*root, &((*root)->middle_child), info, rise);
-    } else {
-        // Insere no filho direito
-        b_node = insert_tree_23(*root, &((*root)->right_child), info, rise);
-    }
-
-    // Processa o nó promovido
-    if (b_node != NULL) {
-        if (!(*root)->two_info) {
-            // Adiciona diretamente se o nó atual tiver espaço
-            add_tree_23(root, *rise, b_node);
-            b_node = NULL;
-        } else {
-            // Divide o nó cheio
-            Info rise1;
-            Tree23 *new_node = break_node(root, *rise, &rise1, b_node);
-
-            if (Dad == NULL) {
-                // Cria uma nova raiz se não houver pai
-                Tree23 *parent = alloc_tree(rise1, *root, new_node, NULL);
-                *root = parent;
-                b_node = NULL;
-            } else {
-                // Retorna o nó promovido
+            else
+            {
+                // Se houver pai, o novo nó criado é retornado para ser processado no nível superior
                 b_node = new_node;
-                *rise = rise1;
+            }
+        }
+    }
+    else
+    {
+        // Caso o nó atual não seja uma folha
+        if (info.start_block < (*root)->info1.start_block)
+        {
+            // Se o valor for menor que info1, desce para o filho esquerdo
+            b_node = insert_tree_23(*root, &((*root)->left_child), info, rise);
+        }
+        else if ((*root)->two_info == false || info.start_block < (*root)->info2.start_block)
+        {
+            // Se o valor estiver entre info1 e info2 (ou não houver info2), desce para o filho do meio
+            b_node = insert_tree_23(*root, &((*root)->middle_child), info, rise);
+        }
+        else
+        {
+            // Se o valor for maior que info2, desce para o filho direito
+            b_node = insert_tree_23(*root, &((*root)->right_child), info, rise);
+        }
+
+        if (b_node != NULL)
+        {
+            // Caso um novo nó tenha sido criado em um nível inferior
+            if ((*root)->two_info == false)
+            {
+                // Caso o nó atual tenha espaço, adiciona o valor promovido
+                add_tree_23(root, *rise, b_node);
+                b_node = NULL; // Zera o nó promovido
+            }
+            else
+            {
+                // Caso o nó atual esteja cheio, realiza uma divisão (split)
+                Info rise1;
+                Tree23 *new_node;
+
+                new_node = break_node(root, *rise, &rise1, b_node);
+
+                if (Dad == NULL)
+                {
+                    // Se não houver pai, cria um novo nó raiz
+                    Tree23 *parent = alloc_tree(rise1, *root, new_node, NULL);
+                    *root = parent; // A nova raiz se torna o nó atual
+                    b_node = NULL;
+                }
+                else
+                {
+                    // Se houver pai, atualiza o nó promovido e retorna para o nível superior
+                    b_node = new_node;
+                    *rise = rise1;
+                }
             }
         }
     }
 
-    return b_node;
+    return b_node; // Retorna o nó promovido, se houver
 }
 
 // Função para imprimir a árvore em ordem
