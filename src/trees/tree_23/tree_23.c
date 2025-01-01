@@ -35,10 +35,10 @@ void deallocate_tree(Zwei_drei_tree *root)
 	}
 }
 
-void deallocate_tree2(Zwei_drei_tree **no)
+void deallocate_tree2(Zwei_drei_tree **node)
 {
-    free(*no);
-    *no = NULL;
+    free(*node);
+    *node = NULL;
 }
 
 bool is_leaf(Zwei_drei_tree *root)
@@ -112,13 +112,13 @@ Zwei_drei_tree *break_node(Zwei_drei_tree **root, Info info, Info *rise, Zwei_dr
     } 
     else if (strcmp(info.br_word, (*root)->info2.br_word) < 0) 
 	{
-        // Novo valor está no meio, `info` deve subir
+        // Novo valor está node meio, `info` deve subir
         *rise = info;
         new_node = alloc_tree((*root)->info2, b_node, (*root)->right, NULL);
     } 
     else 
 	{
-        // Novo valor é o maior, `info2` deve subir, `info` vai para o novo nó
+        // Novo valor é o bigger_node, `info2` deve subir, `info` vai para o novo nó
         *rise = (*root)->info2;
         new_node = alloc_tree(info, (*root)->right, b_node, NULL);
     }
@@ -148,9 +148,9 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 				new = break_node(root, info, rise, b_node);
 				if (Dad == NULL)
 				{
-					Zwei_drei_tree *no;
-					no = alloc_tree(*rise, *root, new, NULL);
-					*root = no;
+					Zwei_drei_tree *node;
+					node = alloc_tree(*rise, *root, new, NULL);
+					*root = node;
 				}
 				else
 					b_node = new;
@@ -175,20 +175,20 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 				else // quando não tem espaço
 				{
 					Info rise1;
-					Zwei_drei_tree *novo;
+					Zwei_drei_tree *new;
 
-					novo = break_node(root, *rise, &rise1, b_node);
+					new = break_node(root, *rise, &rise1, b_node);
 
 					if (Dad == NULL)
 					{
-						Zwei_drei_tree *no;
-						no = alloc_tree(rise1, *root, novo, NULL);
-						*root = no;
+						Zwei_drei_tree *node;
+						node = alloc_tree(rise1, *root, new, NULL);
+						*root = node;
 						b_node = NULL;
 					}
 					else
 					{
-						b_node = novo;
+						b_node = new;
 						*rise = rise1; // Ela botou isso que nao tinha
 					}
 				}
@@ -198,551 +198,546 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 	return b_node;
 }
 
-static int eh_info1(Zwei_drei_tree no, char *info)
+static int is_info1(Zwei_drei_tree node, char *info)
 {
-    return strcmp(info, no.info1.br_word) == 0;
+    return strcmp(info, node.info1.br_word) == 0;
 }
 
-static int eh_info2(Zwei_drei_tree no, char *info)
+static int is_info2(Zwei_drei_tree node, char *info)
 {
-    return no.two_info && (strcmp(info, no.info2.br_word) == 0);
+    return node.two_info && (strcmp(info, node.info2.br_word) == 0);
 }
 
-static int calcular_altura(Zwei_drei_tree *no)
+static int height(Zwei_drei_tree *node)
 {
-    int altura = -1;
+    int h = -1;
 
-    if(no != NULL)
-        altura = 1 + calcular_altura(no->left);
+    if(node != NULL)
+        h = 1 + height(node->left);
 
-    return altura;
+    return h;
 }
 
-static int possivel_remover(Zwei_drei_tree *raiz)
+static int is_removable(Zwei_drei_tree *root)
 {
-    int possivel = 0;
+    int possible = 0;
 
-    if(raiz != NULL)
+    if(root != NULL)
     {
-        possivel = raiz->two_info;
+        possible = root->two_info;
 
-        if(!possivel)
+        if(!possible)
         {
-            possivel = possivel_remover(raiz->mid);
+            possible = is_removable(root->mid);
 
-            if(!possivel)
-                possivel = possivel_remover(raiz->left);
+            if(!possible)
+                possible = is_removable(root->left);
         }
     }
 
-    return possivel;
+    return possible;
 }
 
 
-static Zwei_drei_tree *no23_juntar(Zwei_drei_tree *filho1, Info info, Zwei_drei_tree *maior, Zwei_drei_tree **raiz)
+static Zwei_drei_tree *join_node(Zwei_drei_tree *child1, Info info, Zwei_drei_tree *bigger_node, Zwei_drei_tree **root)
 {
-    add_tree_23(&filho1, info, maior);
+    add_tree_23(&child1, info, bigger_node);
 
-    if((*raiz)->two_info)
-        (*raiz)->two_info = false;
+    if((*root)->two_info)
+        (*root)->two_info = false;
     else
-        deallocate_tree2(raiz);
+        deallocate_tree2(root);
 
-    return filho1;
+    return child1;
 }
 
-Info no23_maior_info(Zwei_drei_tree *raiz)
+Info bigger_info_node(Zwei_drei_tree *root)
 {
-    return raiz->two_info ? raiz->info2 : raiz->info1;
+    return root->two_info ? root->info2 : root->info1;
 }
 
-Zwei_drei_tree *arvore23_criar()
+Zwei_drei_tree *search_23(Zwei_drei_tree *root, char *info)
 {
-    return NULL;
-}
+    Zwei_drei_tree *node;
+    node = NULL;
 
-Zwei_drei_tree *arvore23_buscar(Zwei_drei_tree *raiz, char *info)
-{
-    Zwei_drei_tree *no;
-    no = NULL;
-
-    if(raiz != NULL)
+    if(root != NULL)
     {
-        if(eh_info1(*raiz, info) || eh_info2(*raiz, info))
-            no = raiz;
-        else if(strcmp(info, raiz->info1.br_word) < 0)
-            no = arvore23_buscar(raiz->left, info);
-        else if(raiz->two_info == false || (strcmp(info, raiz->info2.br_word) < 0))
-            no = arvore23_buscar(raiz->mid, info);
+        if(is_info1(*root, info) || is_info2(*root, info))
+            node = root;
+        else if(strcmp(info, root->info1.br_word) < 0)
+            node = search_23(root->left, info);
+        else if(root->two_info == false || (strcmp(info, root->info2.br_word) < 0))
+            node = search_23(root->mid, info);
         else
-            no = arvore23_buscar(raiz->right, info);
+            node = search_23(root->right, info);
     }
 
-    return no;
+    return node;
 }
 
-Zwei_drei_tree *arvore23_buscar_menor_filho(Zwei_drei_tree *raiz, Zwei_drei_tree **pai)
+Zwei_drei_tree *search_23_lower_child(Zwei_drei_tree *root, Zwei_drei_tree **dad)
 {
-    Zwei_drei_tree *filho;
-    filho = raiz;
+    Zwei_drei_tree *child;
+    child = root;
 
-    while(!is_leaf(filho))
+    while(!is_leaf(child))
     {
-        *pai = filho;
-        filho = filho->left;
+        *dad = child;
+        child = child->left;
     }
 
-    return filho;
+    return child;
 }
 
-Zwei_drei_tree *arvore23_buscar_maior_filho(Zwei_drei_tree *raiz, Zwei_drei_tree **pai, Info *maior_valor)
+Zwei_drei_tree *search_23_bigger_child(Zwei_drei_tree *root, Zwei_drei_tree **dad, Info *bigger_value)
 {
-    Zwei_drei_tree *filho;
-    filho = raiz;
+    Zwei_drei_tree *child;
+    child = root;
 
-    while(!is_leaf(filho))
+    while(!is_leaf(child))
     {
-        *pai = filho;
-        if(filho->two_info == false)
-            filho = filho->mid;
+        *dad = child;
+        if(child->two_info == false)
+            child = child->mid;
         else
-            filho = filho->right;
+            child = child->right;
     }
 
-    if(filho != NULL)
-        *maior_valor = no23_maior_info(filho);
+    if(child != NULL)
+        *bigger_value = bigger_info_node(child);
 
-    return filho;
+    return child;
 }
 
-Zwei_drei_tree *arvore23_buscar_pai(Zwei_drei_tree *raiz, char *info)
+Zwei_drei_tree *search_23_dad(Zwei_drei_tree *root, char *info)
 {
-    Zwei_drei_tree *pai;
-    pai = NULL;
+    Zwei_drei_tree *dad;
+    dad = NULL;
 
-    if(raiz != NULL)
+    if(root != NULL)
     {
-        if(!eh_info1(*raiz, info) && !eh_info2(*raiz, info))
+        if(!is_info1(*root, info) && !is_info2(*root, info))
         {
-            if(strcmp(info, raiz->info1.br_word) < 0)
-                pai = arvore23_buscar_pai(raiz->left, info);
-            else if(raiz->two_info == false || (strcmp(info, raiz->info2.br_word) < 0))
-                pai = arvore23_buscar_pai(raiz->mid, info);
+            if(strcmp(info, root->info1.br_word) < 0)
+                dad = search_23_dad(root->left, info);
+            else if(root->two_info == false || (strcmp(info, root->info2.br_word) < 0))
+                dad = search_23_dad(root->mid, info);
             else
-                pai = arvore23_buscar_pai(raiz->right, info);
+                dad = search_23_dad(root->right, info);
 
-            if(pai == NULL)
-                pai = raiz;
+            if(dad == NULL)
+                dad = root;
         }
     }
 
-    return pai;
+    return dad;
 }
 
-Zwei_drei_tree *arvore23_buscar_maior_pai(Zwei_drei_tree *raiz, char *info)
+Zwei_drei_tree *search_23_bigger_dad(Zwei_drei_tree *root, char *info)
 {
-    Zwei_drei_tree *pai;
-    pai = NULL;
+    Zwei_drei_tree *dad;
+    dad = NULL;
 
-    if(raiz != NULL)
+    if(root != NULL)
     {
-        if(!eh_info1(*raiz, info) && !eh_info2(*raiz, info))
+        if(!is_info1(*root, info) && !is_info2(*root, info))
         {
-            if(strcmp(info, raiz->info1.br_word) < 0)
-                pai = arvore23_buscar_maior_pai(raiz->left, info);
-            else if(raiz->two_info == false || (strcmp(info, raiz->info2.br_word) < 0))
-                pai = arvore23_buscar_maior_pai(raiz->mid, info);
+            if(strcmp(info, root->info1.br_word) < 0)
+                dad = search_23_bigger_dad(root->left, info);
+            else if(root->two_info == false || (strcmp(info, root->info2.br_word) < 0))
+                dad = search_23_bigger_dad(root->mid, info);
             else
-                pai = arvore23_buscar_maior_pai(raiz->right, info);
+                dad = search_23_bigger_dad(root->right, info);
 
-            if(pai == NULL &&
-            ((raiz->two_info == false && (strcmp(raiz->info1.br_word, info) > 0)) || (raiz->two_info && (strcmp(raiz->info2.br_word, info) > 0))))
-                pai = raiz;
+            if(dad == NULL &&
+            ((root->two_info == false && (strcmp(root->info1.br_word, info) > 0)) || (root->two_info && (strcmp(root->info2.br_word, info) > 0))))
+                dad = root;
         }
     }
 
-    return pai;
+    return dad;
 }
 
-Zwei_drei_tree *arvore23_buscar_menor_pai(Zwei_drei_tree *raiz, char *info)
+Zwei_drei_tree *search_23_small_dad(Zwei_drei_tree *root, char *info)
 {
-    Zwei_drei_tree *pai;
-    pai = NULL;
+    Zwei_drei_tree *dad;
+    dad = NULL;
 
-    if(raiz != NULL)
+    if(root != NULL)
     {
-        if(!eh_info1(*raiz, info) && !eh_info2(*raiz, info))
+        if(!is_info1(*root, info) && !is_info2(*root, info))
         {
-            if(strcmp(info, raiz->info1.br_word) < 0)
-                pai = arvore23_buscar_menor_pai(raiz->left, info);
-            else if(raiz->two_info == false || (strcmp(info, raiz->info2.br_word) < 0))
-                pai = arvore23_buscar_menor_pai(raiz->mid, info);
+            if(strcmp(info, root->info1.br_word) < 0)
+                dad = search_23_small_dad(root->left, info);
+            else if(root->two_info == false || (strcmp(info, root->info2.br_word) < 0))
+                dad = search_23_small_dad(root->mid, info);
             else
-                pai = arvore23_buscar_menor_pai(raiz->right, info);
+                dad = search_23_small_dad(root->right, info);
 
-            if(pai == NULL && (strcmp(raiz->info1.br_word, info) < 0))
-                pai = raiz;
+            if(dad == NULL && (strcmp(root->info1.br_word, info) < 0))
+                dad = root;
         }
     }
 
-    return pai;
+    return dad;
 }
 
-static Zwei_drei_tree *arvore23_buscar_menor_pai_2_infos(Zwei_drei_tree *raiz, char *info)
+static Zwei_drei_tree *search_23_small_dad_info2(Zwei_drei_tree *root, char *info)
 {
-    Zwei_drei_tree *pai;
-    pai = NULL;
+    Zwei_drei_tree *dad;
+    dad = NULL;
 
-    if(raiz != NULL)
+    if(root != NULL)
     {
-        if(!eh_info1(*raiz, info) && !eh_info2(*raiz, info))
+        if(!is_info1(*root, info) && !is_info2(*root, info))
         {
-            if(strcmp(info, raiz->info1.br_word) < 0)
-                pai = arvore23_buscar_menor_pai_2_infos(raiz->left, info);
-            else if(raiz->two_info == false || (strcmp(info, raiz->info2.br_word) < 0))
-                pai = arvore23_buscar_menor_pai_2_infos(raiz->mid, info);
+            if(strcmp(info, root->info1.br_word) < 0)
+                dad = search_23_small_dad_info2(root->left, info);
+            else if(root->two_info == false || (strcmp(info, root->info2.br_word) < 0))
+                dad = search_23_small_dad_info2(root->mid, info);
             else
-                pai = arvore23_buscar_menor_pai_2_infos(raiz->right, info);
+                dad = search_23_small_dad_info2(root->right, info);
 
-            if(pai == NULL && raiz->two_info && (strcmp(raiz->info2.br_word, info) < 0))
-                pai = raiz;
+            if(dad == NULL && root->two_info && (strcmp(root->info2.br_word, info) < 0))
+                dad = root;
         }
     }
 
-    return pai;
+    return dad;
 }
 
-static int movimento_onda(Info saindo, Info *entrada, Zwei_drei_tree *pai, Zwei_drei_tree **origem, Zwei_drei_tree **raiz, Zwei_drei_tree **maior, int (*funcao_remover)(Zwei_drei_tree **, char *, Zwei_drei_tree *, Zwei_drei_tree **, Zwei_drei_tree **))
+static int wave(Info saindo, Info *input, Zwei_drei_tree *dad, Zwei_drei_tree **source, Zwei_drei_tree **root, Zwei_drei_tree **bigger_node, int (*remove_func)(Zwei_drei_tree **, char *, Zwei_drei_tree *, Zwei_drei_tree **, Zwei_drei_tree **))
 {
-    int removeu = funcao_remover(raiz, saindo.br_word, pai, origem, maior);
-    *entrada = saindo;
-    return removeu;
+    int removed = remove_func(root, saindo.br_word, dad, source, bigger_node);
+    *input = saindo;
+    return removed;
 }
 
 
-static int arvore23_remover_no_interno1(Zwei_drei_tree **origem, Zwei_drei_tree* raiz, Info *info, Zwei_drei_tree *filho1, Zwei_drei_tree *filho2, Zwei_drei_tree **maior)
+static int remove_internal_node1(Zwei_drei_tree **source, Zwei_drei_tree* root, Info *info, Zwei_drei_tree *child1, Zwei_drei_tree *child2, Zwei_drei_tree **bigger_node)
 {
-    int removeu;
-    Zwei_drei_tree *filho, *pai;
+    int removed;
+    Zwei_drei_tree *child, *dad;
     Info info_filho;
 
-    pai = raiz;
+    dad = root;
 
-    filho = arvore23_buscar_maior_filho(filho1, &pai, &info_filho);
+    child = search_23_bigger_child(child1, &dad, &info_filho);
 
-    if(filho->two_info)
+    if(child->two_info)
     {
         *info = info_filho;
-        filho->two_info = false;
+        child->two_info = false;
     }
     else
     {
-        filho = arvore23_buscar_menor_filho(filho2, &pai);
-        removeu = movimento_onda(filho->info1, info, pai, origem, &filho, maior, arvore23_remover1);
+        child = search_23_lower_child(child2, &dad);
+        removed = wave(child->info1, info, dad, source, &child, bigger_node, remove_wave1);
     }
 
-    return removeu;
+    return removed;
 }
 
-static int arvore23_remover_no_interno2(Zwei_drei_tree **origem, Zwei_drei_tree* raiz, Info *info, Zwei_drei_tree *filho1, Zwei_drei_tree *filho2, Zwei_drei_tree **maior)
+static int remove_internal_node2(Zwei_drei_tree **source, Zwei_drei_tree* root, Info *info, Zwei_drei_tree *child1, Zwei_drei_tree *child2, Zwei_drei_tree **bigger_node)
 {
-    int removeu;
-    Zwei_drei_tree *filho, *pai;
-    Info info_filho;
+    int removed;
+    Zwei_drei_tree *child, *dad;
+    Info info_child;
 
-    pai = raiz;
+    dad = root;
 
-    filho = arvore23_buscar_menor_filho(filho1, &pai);
+    child = search_23_lower_child(child1, &dad);
 
-    if(filho->two_info)
+    if(child->two_info)
     {
-        *info = filho->info1;
-        filho->info1 = filho->info2;
-        filho->two_info = false;
+        *info = child->info1;
+        child->info1 = child->info2;
+        child->two_info = false;
     }
     else
     {
-        filho = arvore23_buscar_maior_filho(filho2, &pai, &info_filho);
-        removeu = movimento_onda(info_filho, info, pai, origem, &filho, maior, arvore23_remover2);
+        child = search_23_bigger_child(child2, &dad, &info_child);
+        removed = wave(info_child, info, dad, source, &child, bigger_node, remove_wave2);
     }
 
-    return removeu;
+    return removed;
 }
 
-int arvore23_remover1(Zwei_drei_tree **raiz, char *info, Zwei_drei_tree *pai, Zwei_drei_tree **origem, Zwei_drei_tree **maior)
+int remove_wave1(Zwei_drei_tree **root, char *info, Zwei_drei_tree *dad, Zwei_drei_tree **source, Zwei_drei_tree **bigger_node)
 {
-    int removeu = 0;
+    int removed = 0;
 
-    if(*raiz != NULL)
+    if(*root != NULL)
     {
-        int info1 = eh_info1(**raiz, info);
-        int info2 = eh_info2(**raiz, info);
+        int info1 = is_info1(**root, info);
+        int info2 = is_info2(**root, info);
 
         if(info1 || info2)
         {
-            removeu = 1;
-            if(is_leaf(*raiz))
+            removed = 1;
+            if(is_leaf(*root))
             {
-                if((*raiz)->two_info)
+                if((*root)->two_info)
                 {
                     if(info1)
-                        (*raiz)->info1 = (*raiz)->info2;
+                        (*root)->info1 = (*root)->info2;
 
-                    (*raiz)->two_info = false;
+                    (*root)->two_info = false;
                 }
                 else
                 {
-                    if(pai == NULL)
-                        deallocate_tree2(raiz);
+                    if(dad == NULL)
+                        deallocate_tree2(root);
                     else
                     {
-                        Zwei_drei_tree *pai_aux;
-                        Info info_pai;
-                        if(*raiz == pai->left || (pai->two_info && *raiz == pai->mid))
+                        Zwei_drei_tree *dad_aux;
+                        Info info_dad;
+                        if(*root == dad->left || (dad->two_info && *root == dad->mid))
                         {
-                            pai_aux = arvore23_buscar_pai(*origem, pai->info1.br_word);
+                            dad_aux = search_23_dad(*source, dad->info1.br_word);
                             
-                            if(*raiz == pai->left)
-                                info_pai = pai->info1;
+                            if(*root == dad->left)
+                                info_dad = dad->info1;
                             else 
-                                info_pai = pai->info2;
+                                info_dad = dad->info2;
 
-                            removeu = movimento_onda(info_pai, &((*raiz)->info1), pai_aux, origem, &pai, maior, arvore23_remover1);
+                            removed = wave(info_dad, &((*root)->info1), dad_aux, source, &dad, bigger_node, remove_wave1);
                         }
-                        else // Filho do mid (com pai de 1 info) ou da direita
+                        else // Filho do mid (com dad de 1 info) ou da direita
                         {
-                            pai_aux = arvore23_buscar_maior_pai(*origem, (*raiz)->info1.br_word);
+                            dad_aux = search_23_bigger_dad(*source, (*root)->info1.br_word);
 
-                            Zwei_drei_tree *menor_pai;
-                            menor_pai = arvore23_buscar_menor_pai_2_infos(*origem, (*raiz)->info1.br_word);
+                            Zwei_drei_tree *minor_dad;
+                            minor_dad = search_23_small_dad_info2(*source, (*root)->info1.br_word);
 
 
-                            if(pai_aux != NULL)
+                            if(dad_aux != NULL)
                             {
-                                if(strcmp(pai_aux->info1.br_word, (*raiz)->info1.br_word) > 0)
-                                    info_pai = pai_aux->info1;
+                                if(strcmp(dad_aux->info1.br_word, (*root)->info1.br_word) > 0)
+                                    info_dad = dad_aux->info1;
                                 else
-                                    info_pai = pai_aux->info2;
+                                    info_dad = dad_aux->info2;
                             }
 
-                            int altura_menor_pai = calcular_altura(menor_pai);
-                            int altura_pai_aux = calcular_altura(pai_aux);
+                            int minor_dad_height = height(minor_dad);
+                            int dad_aux_height = height(dad_aux);
 
                  
-                            if(pai_aux == NULL || (pai_aux != pai && menor_pai != NULL && altura_menor_pai <= altura_pai_aux && (strcmp(info_pai.br_word, menor_pai->info2.br_word) > 0)))
+                            if(dad_aux == NULL || (dad_aux != dad && minor_dad != NULL && minor_dad_height <= dad_aux_height && (strcmp(info_dad.br_word, minor_dad->info2.br_word) > 0)))
                             {
-                                *maior = pai;
-                                (*raiz)->two_info = false;
-                                removeu = -1;
+                                *bigger_node = dad;
+                                (*root)->two_info = false;
+                                removed = -1;
                             }
                             else
                             {
 
-                                Zwei_drei_tree *avo;
-                                avo = arvore23_buscar_pai(*origem, info_pai.br_word);
-                                removeu = movimento_onda(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, arvore23_remover1);
+                                Zwei_drei_tree *gradpa;
+                                gradpa = search_23_dad(*source, info_dad.br_word);
+                                removed = wave(info_dad, &((*root)->info1), gradpa, source, &dad_aux, bigger_node, remove_wave1);
                             }
                         }
                     }
                 }
             }
             else if(info2)
-                removeu = arvore23_remover_no_interno1(origem, *raiz, &((*raiz)->info2), (*raiz)->mid, (*raiz)->right, maior);
+                removed = remove_internal_node1(source, *root, &((*root)->info2), (*root)->mid, (*root)->right, bigger_node);
             else if(info1)
-                removeu = arvore23_remover_no_interno1(origem, *raiz, &((*raiz)->info1), (*raiz)->left, (*raiz)->mid, maior);
+                removed = remove_internal_node1(source, *root, &((*root)->info1), (*root)->left, (*root)->mid, bigger_node);
         }
         else
         {
-            if(strcmp(info, (*raiz)->info1.br_word) < 0)
-                removeu = arvore23_remover1(&(*raiz)->left, info, *raiz, origem, maior);
-            else if((*raiz)->two_info == false || (strcmp(info, (*raiz)->info2.br_word) < 0))
-                removeu = arvore23_remover1(&(*raiz)->mid, info, *raiz, origem, maior);
+            if(strcmp(info, (*root)->info1.br_word) < 0)
+                removed = remove_wave1(&(*root)->left, info, *root, source, bigger_node);
+            else if((*root)->two_info == false || (strcmp(info, (*root)->info2.br_word) < 0))
+                removed = remove_wave1(&(*root)->mid, info, *root, source, bigger_node);
             else
-                removeu = arvore23_remover1(&(*raiz)->right, info, *raiz, origem, maior);
+                removed = remove_wave1(&(*root)->right, info, *root, source, bigger_node);
         }
     }
-    return removeu;
+    return removed;
 }
 
-int arvore23_remover2(Zwei_drei_tree **raiz, char *info, Zwei_drei_tree *pai, Zwei_drei_tree **origem, Zwei_drei_tree **maior)
+int remove_wave2(Zwei_drei_tree **root, char *info, Zwei_drei_tree *dad, Zwei_drei_tree **source, Zwei_drei_tree **bigger_node)
 {
-    int removeu = 0;
+    int removed = 0;
 
-    if(*raiz != NULL)
+    if(*root != NULL)
     {
-        int info1 = eh_info1(**raiz, info);
-        int info2 = eh_info2(**raiz, info);
+        int info1 = is_info1(**root, info);
+        int info2 = is_info2(**root, info);
 
         if(info1 || info2)
         {
-            removeu = 1;
-            if(is_leaf(*raiz))
+            removed = 1;
+            if(is_leaf(*root))
             {
-                if((*raiz)->two_info)
+                if((*root)->two_info)
                 {
                     if(info1)
-                        (*raiz)->info1 = (*raiz)->info2;
+                        (*root)->info1 = (*root)->info2;
 
-                    (*raiz)->two_info = false;
+                    (*root)->two_info = false;
                 }
                 else
                 {
-                    if(pai == NULL)
-                        deallocate_tree2(raiz);
+                    if(dad == NULL)
+                        deallocate_tree2(root);
                     else
                     {
-                        Zwei_drei_tree *pai_aux;
-                        Info info_pai;
-                        if(*raiz == pai->mid || (pai->two_info && *raiz == pai->right))
+                        Zwei_drei_tree *dad_aux;
+                        Info info_dad;
+                        if(*root == dad->mid || (dad->two_info && *root == dad->right))
                         {
-                            pai_aux = arvore23_buscar_pai(*origem, pai->info1.br_word);
+                            dad_aux = search_23_dad(*source, dad->info1.br_word);
                             
-                            if(*raiz == pai->mid)
-                                info_pai = pai->info1;
+                            if(*root == dad->mid)
+                                info_dad = dad->info1;
                             else 
-                                info_pai = pai->info2;
+                                info_dad = dad->info2;
 
-                            removeu = movimento_onda(info_pai, &((*raiz)->info1), pai_aux, origem, &pai, maior, arvore23_remover2);
+                            removed = wave(info_dad, &((*root)->info1), dad_aux, source, &dad, bigger_node, remove_wave2);
                         }
                         else // Filho da esquerda
                         {
-                            pai_aux = arvore23_buscar_menor_pai(*origem, (*raiz)->info1.br_word);
+                            dad_aux = search_23_small_dad(*source, (*root)->info1.br_word);
 
-                            Zwei_drei_tree *menor_pai;
-                            menor_pai = arvore23_buscar_menor_pai_2_infos(*origem, (*raiz)->info1.br_word);
+                            Zwei_drei_tree *minor_dad;
+                            minor_dad = search_23_small_dad_info2(*source, (*root)->info1.br_word);
 
-                            Zwei_drei_tree *avo;
-                            if(pai_aux == NULL || (pai_aux != pai && menor_pai != NULL))
+                            Zwei_drei_tree *gradpa;
+                            if(dad_aux == NULL || (dad_aux != dad && minor_dad != NULL))
                             {  
-                                removeu = -1;
-                                *maior = pai;
+                                removed = -1;
+                                *bigger_node = dad;
                             }
                             else
                             {
-                                if(pai_aux->two_info && (strcmp(pai_aux->info2.br_word, (*raiz)->info1.br_word) < 0))
-                                    info_pai = pai_aux->info2;
+                                if(dad_aux->two_info && (strcmp(dad_aux->info2.br_word, (*root)->info1.br_word) < 0))
+                                    info_dad = dad_aux->info2;
                                 else
-                                    info_pai = pai_aux->info1;
+                                    info_dad = dad_aux->info1;
 
-                                avo = arvore23_buscar_pai(*origem, info_pai.br_word);
-                                removeu = movimento_onda(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, arvore23_remover2);
+                                gradpa = search_23_dad(*source, info_dad.br_word);
+                                removed = wave(info_dad, &((*root)->info1), gradpa, source, &dad_aux, bigger_node, remove_wave2);
                             }
                         }
                     }
                 }
             }
             else if(info2)
-                removeu = arvore23_remover_no_interno2(origem, *raiz, &((*raiz)->info2), (*raiz)->right, (*raiz)->mid, maior);
+                removed = remove_internal_node2(source, *root, &((*root)->info2), (*root)->right, (*root)->mid, bigger_node);
             else if(info1)
-                removeu = arvore23_remover_no_interno2(origem, *raiz, &((*raiz)->info1), (*raiz)->mid, (*raiz)->left, maior);
+                removed = remove_internal_node2(source, *root, &((*root)->info1), (*root)->mid, (*root)->left, bigger_node);
         }
         else
         {
-            if(strcmp(info, (*raiz)->info1.br_word) < 0)
-                removeu = arvore23_remover2(&(*raiz)->left, info, *raiz, origem, maior);
-            else if((*raiz)->two_info == false || (strcmp(info, (*raiz)->info2.br_word) < 0))
-                removeu = arvore23_remover2(&(*raiz)->mid, info, *raiz, origem, maior);
+            if(strcmp(info, (*root)->info1.br_word) < 0)
+                removed = remove_wave2(&(*root)->left, info, *root, source, bigger_node);
+            else if((*root)->two_info == false || (strcmp(info, (*root)->info2.br_word) < 0))
+                removed = remove_wave2(&(*root)->mid, info, *root, source, bigger_node);
             else
-                removeu = arvore23_remover2(&(*raiz)->right, info, *raiz, origem, maior);
+                removed = remove_wave2(&(*root)->right, info, *root, source, bigger_node);
         }
     }
-    return removeu;
+    return removed;
 }
 
-int remove_23(Zwei_drei_tree **raiz, char *info)
+int remove_23(Zwei_drei_tree **root, char *info)
 {   
-    Zwei_drei_tree *maior, *posicao_juncao;
-    int removeu = arvore23_remover1(raiz, info, NULL, raiz, &posicao_juncao);
+    Zwei_drei_tree *bigger_node, *join_pos;
+    int removed = remove_wave1(root, info, NULL, root, &join_pos);
 
-    if(removeu == -1)
+    if(removed == -1)
     {
-        removeu = 1;
-        Info valor_juncao = no23_maior_info(posicao_juncao);
-        maior = NULL;
-        int removeu_aux = arvore23_rebalancear(raiz, valor_juncao.br_word, &maior);
+        removed = 1;
+        Info join_value = bigger_info_node(join_pos);
+        bigger_node = NULL;
+        int removed_aux = rebalance_23(root, join_value.br_word, &bigger_node);
         
-        if(removeu_aux == -1)
+        if(removed_aux == -1)
         {
-            Zwei_drei_tree *pai, *posicao_juncao2;
-            Info *entrada;
-            pai = arvore23_buscar_pai(*raiz, valor_juncao.br_word);
+            Zwei_drei_tree *dad, *join_pos2;
+            Info *input;
+            dad = search_23_dad(*root, join_value.br_word);
 
-            if(eh_info1(*posicao_juncao, valor_juncao.br_word))
-                entrada = &(posicao_juncao->mid->info1);
+            if(is_info1(*join_pos, join_value.br_word))
+                input = &(join_pos->mid->info1);
             else
-                entrada = &(posicao_juncao->right->info1);
+                input = &(join_pos->right->info1);
 
-            removeu_aux = movimento_onda(valor_juncao, entrada, pai, raiz, &posicao_juncao, &posicao_juncao2, arvore23_remover2);
+            removed_aux = wave(join_value, input, dad, root, &join_pos, &join_pos2, remove_wave2);
 
-            if(removeu_aux == -1)
+            if(removed_aux == -1)
             {
-                valor_juncao = posicao_juncao2->info1;
-                pai = arvore23_buscar_pai(*raiz, valor_juncao.br_word);
-                removeu_aux = movimento_onda(valor_juncao, &(posicao_juncao2->left->info1), pai, raiz, &posicao_juncao2, &posicao_juncao, arvore23_remover1);
+                join_value = join_pos2->info1;
+                dad = search_23_dad(*root, join_value.br_word);
+                removed_aux = wave(join_value, &(join_pos2->left->info1), dad, root, &join_pos2, &join_pos, remove_wave1);
 
-                valor_juncao = no23_maior_info(posicao_juncao);
-                maior = NULL;
-                removeu_aux = arvore23_rebalancear(raiz, valor_juncao.br_word, &maior);
+                join_value = bigger_info_node(join_pos);
+                bigger_node = NULL;
+                removed_aux = rebalance_23(root, join_value.br_word, &bigger_node);
             }
         }
 
-        if(*raiz == NULL)
-            *raiz = maior;
+        if(*root == NULL)
+            *root = bigger_node;
     }
 
-    return removeu;
+    return removed;
 }
 
-static int balanceamento(Zwei_drei_tree **raiz, Zwei_drei_tree *filho1, Zwei_drei_tree **filho2, Info info, Zwei_drei_tree **maior)
+static int balance_23(Zwei_drei_tree **root, Zwei_drei_tree *child1, Zwei_drei_tree **child2, Info info, Zwei_drei_tree **bigger_node)
 {
-    int balanceou = 0;
-    if(*filho2 == NULL || !(*filho2)->two_info)
+    int balanced = 0;
+    if(*child2 == NULL || !(*child2)->two_info)
     {
-        if(*filho2 != NULL)
-            deallocate_tree2(filho2);
+        if(*child2 != NULL)
+            deallocate_tree2(child2);
 
-        *maior = no23_juntar(filho1, info, *maior, raiz);
-        balanceou = 1;
+        *bigger_node = join_node(child1, info, *bigger_node, root);
+        balanced = 1;
     }
-    return balanceou;
+    return balanced;
 }
 
-int arvore23_rebalancear(Zwei_drei_tree **raiz, char *info, Zwei_drei_tree **maior)
+int rebalance_23(Zwei_drei_tree **root, char *info, Zwei_drei_tree **bigger_node)
 {
-    int balanceou = 0;
-    if(*raiz != NULL)
+    int balanced = 0;
+    if(*root != NULL)
     {
-        if(!is_leaf(*raiz))
+        if(!is_leaf(*root))
         {
-            if(strcmp(info, (*raiz)->info1.br_word) < 0)
-                balanceou = arvore23_rebalancear(&((*raiz)->left), info, maior);
-            else if((*raiz)->two_info == false || (strcmp(info, (*raiz)->info2.br_word) < 0))
+            if(strcmp(info, (*root)->info1.br_word) < 0)
+                balanced = rebalance_23(&((*root)->left), info, bigger_node);
+            else if((*root)->two_info == false || (strcmp(info, (*root)->info2.br_word) < 0))
             {
-                if((*raiz)->left->two_info && !possivel_remover((*raiz)->mid))
-                    balanceou = -1;
+                if((*root)->left->two_info && !is_removable((*root)->mid))
+                    balanced = -1;
                 else
-                    balanceou = arvore23_rebalancear(&((*raiz)->mid), info, maior);
+                    balanced = rebalance_23(&((*root)->mid), info, bigger_node);
             }
             else
             {
-                if((*raiz)->mid->two_info && !possivel_remover((*raiz)->right))
-                    balanceou = -1;
+                if((*root)->mid->two_info && !is_removable((*root)->right))
+                    balanced = -1;
                 else
-                    balanceou = arvore23_rebalancear(&((*raiz)->right), info, maior);
+                    balanced = rebalance_23(&((*root)->right), info, bigger_node);
             }
 
-            if(balanceou != -1)
+            if(balanced != -1)
             {
-                if((*raiz)->two_info == false)
-                    balanceou = balanceamento(raiz, (*raiz)->left, &((*raiz)->mid), (*raiz)->info1, maior);
-                else if((*raiz)->two_info)
-                    balanceou = balanceamento(raiz, (*raiz)->mid, &((*raiz)->right), (*raiz)->info2, maior);
+                if((*root)->two_info == false)
+                    balanced = balance_23(root, (*root)->left, &((*root)->mid), (*root)->info1, bigger_node);
+                else if((*root)->two_info)
+                    balanced = balance_23(root, (*root)->mid, &((*root)->right), (*root)->info2, bigger_node);
             }
             
         }
     }
 
-    return balanceou;
+    return balanced;
 }
 
 
@@ -868,7 +863,7 @@ bool remove_from_leaf(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info)
 				else 
 					merge_nodes(Dad, root, (*Dad)->mid);
 				
-				// Se o pai ficou sem informações, precisa reorganizar a árvore
+				// Se o dad ficou sem informações, precisa reorganizar a árvore
 				if ((*Dad)->mid == NULL) 
 				{
 					Zwei_drei_tree *temp = *Dad;
@@ -1147,3 +1142,53 @@ void remove_port_word(Zwei_drei_tree **root, Info info)
 		}
 	} 
 }
+
+
+
+// /////////////////////////////////////////////////////////////////////////////////////////
+
+// static int is_info1(Zwei_drei_tree node, char *info);
+
+// static int is_info2(Zwei_drei_tree node, char *info);
+
+// static int height(Zwei_drei_tree *node);
+
+// static int is_removable(Zwei_drei_tree *root);
+
+// static Zwei_drei_tree *join_node(Zwei_drei_tree *child1, Info info, Zwei_drei_tree *bigger_node, Zwei_drei_tree **root);
+
+// Info bigger_info_node(Zwei_drei_tree *root);
+
+// Zwei_drei_tree *arvore23_criar();
+
+// Zwei_drei_tree *search_23(Zwei_drei_tree *root, char *info);
+
+// Zwei_drei_tree *search_23_lower_child(Zwei_drei_tree *root, Zwei_drei_tree **dad);
+
+// Zwei_drei_tree *search_23_bigger_child(Zwei_drei_tree *root, Zwei_drei_tree **dad, Info *bigger_value);
+
+// Zwei_drei_tree *search_23_dad(Zwei_drei_tree *root, char *info);
+
+// Zwei_drei_tree *search_23_bigger_dad(Zwei_drei_tree *root, char *info);
+
+// Zwei_drei_tree *search_23_small_dad(Zwei_drei_tree *root, char *info);
+
+// static Zwei_drei_tree *search_23_small_dad_info2(Zwei_drei_tree *root, char *info);
+
+// static int wave(Info saindo, Info *input, Zwei_drei_tree *dad, Zwei_drei_tree **source, Zwei_drei_tree **root, Zwei_drei_tree **bigger_node, int (*remove_func)(Zwei_drei_tree **, char *, Zwei_drei_tree *, Zwei_drei_tree **, Zwei_drei_tree **));
+
+// static int remove_internal_node1(Zwei_drei_tree **source, Zwei_drei_tree* root, Info *info, Zwei_drei_tree *child1, Zwei_drei_tree *child2, Zwei_drei_tree **bigger_node);
+
+// static int remove_internal_node2(Zwei_drei_tree **source, Zwei_drei_tree* root, Info *info, Zwei_drei_tree *child1, Zwei_drei_tree *child2, Zwei_drei_tree **bigger_node);
+
+// int remove_wave1(Zwei_drei_tree **root, char *info, Zwei_drei_tree *dad, Zwei_drei_tree **source, Zwei_drei_tree **bigger_node);
+
+// int remove_wave2(Zwei_drei_tree **root, char *info, Zwei_drei_tree *dad, Zwei_drei_tree **source, Zwei_drei_tree **bigger_node);
+
+// int remove_23(Zwei_drei_tree **root, char *info);
+
+// static int balance_23(Zwei_drei_tree **root, Zwei_drei_tree *child1, Zwei_drei_tree **child2, Info info, Zwei_drei_tree **bigger_node);
+
+// int rebalance_23(Zwei_drei_tree **root, char *info, Zwei_drei_tree **bigger_node);
+
+// /////////////////////////////////////////////////////////////////////////////////////////
