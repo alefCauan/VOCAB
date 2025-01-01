@@ -45,3 +45,4 @@ gcc -g  binary.o tree_23.o utils.o parser.o main.o -o ../bin/$OUT
 rm *.o
 
 ../bin/$OUT
+

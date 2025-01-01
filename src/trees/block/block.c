@@ -13,7 +13,7 @@ Tree23 *createNode(char status, int start_block, int end_block) {
     return new_node;
 }
 
-Tree23 *alloc_tree(Info info, Tree23 *left, Tree23 *mid, Tree23 *right)
+Tree23 *alloc_tree(Info info, Tree23 *left, Tree23 *middle_child, Tree23 *right_child)
 {
 	Tree23 *node;
 
@@ -24,8 +24,8 @@ Tree23 *alloc_tree(Info info, Tree23 *left, Tree23 *mid, Tree23 *right)
 	
 	(*node).two_info = false;
 	(*node).left_child = left;
-	(*node).middle_child = mid;
-	(*node).right_child = right;
+	(*node).middle_child = middle_child;
+	(*node).right_child = right_child;
 
 	return node;
 }
@@ -64,17 +64,22 @@ void add_tree_23(Tree23 **root, Info info, Tree23 *b_node)
 Tree23 *break_node(Tree23 **root, Info info, Info *rise, Tree23 *b_node) {
     Tree23 *new_node;
 
-    if (info.start_block < (*root)->info1.start_block) {
+    if (info.start_block < (*root)->info1.start_block) 
+    {
         // O novo valor é o menor e deve ser promovido para o pai
         *rise = (*root)->info1; // info1 é promovido
         new_node = alloc_tree((*root)->info2, (*root)->middle_child, (*root)->right_child, NULL);
         (*root)->info1 = info; // O novo valor se torna info1
         (*root)->middle_child = b_node; // O novo filho é atribuído ao meio
-    } else if (!(*root)->two_info || info.start_block < (*root)->info2.start_block) {
+    } 
+    else if (!(*root)->two_info || info.start_block < (*root)->info2.start_block) 
+    {
         // O novo valor está no meio e deve ser promovido
         *rise = info; // O novo valor é promovido
         new_node = alloc_tree((*root)->info2, b_node, (*root)->right_child, NULL);
-    } else {
+    } 
+    else 
+    {
         // O novo valor é o maior e deve ser promovido para o pai
         *rise = (*root)->info2; // info2 é promovido
         new_node = alloc_tree(info, (*root)->right_child, b_node, NULL);
@@ -207,4 +212,5 @@ void print_tree_in_order(Tree23 *root) {
 void concatenate_adjacent_nodes(Tree23 *root) {
     // TODO: CONCATENAÇÃO DOS NÓS COM A FUNCÇÃO DE REMOVER 
 }
+
 

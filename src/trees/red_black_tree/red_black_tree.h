@@ -15,11 +15,11 @@ typedef enum {
 
 
 typedef struct Info_rb {
-    ////////////////////////
-    Binary_tree *eng_words;
-    char br_word[256]; // Palavra em português
-    int unit;          // Unidade associada
-    ///////////////////////
+    //////////////////////////
+    Binary_tree *eng_words; // Palavras em inglês
+    char br_word[256];      // Palavra em português
+    int unit;               // Unidade associada
+    //////////////////////////
 } Info_rb;
 
 typedef struct Red_black_tree {

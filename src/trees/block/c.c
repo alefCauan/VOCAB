@@ -36,15 +36,14 @@ bool free_blocks(Tree23 *root, int start_block, int end_block) {
             insert_tree_23(NULL, &root, remaining_info, NULL);
         } else {
             // Se os blocos estão no meio do intervalo
-            Info left_info = {'O', root->info1.start_block, start_block - 1};
+            Info left_info =  {'O', root->info1.start_block, start_block - 1};
             Info right_info = {'O', end_block + 1, root->info1.end_block};
             root->info1.start_block = start_block;
             root->info1.end_block = end_block;
             root->info1.status = 'L';
             Info rise;
-            root = insert_tree_23(NULL, &root,left_info, &rise);
-            printf("print");
-            root = insert_tree_23(NULL, &root, right_info, &rise);
+            insert_tree_23(NULL, &root, left_info,  &rise);
+            insert_tree_23(NULL, &root, right_info, &rise);
         }
 
         // Concatenar nós adjacentes
@@ -86,7 +85,6 @@ bool free_blocks(Tree23 *root, int start_block, int end_block) {
             root->info2.status = 'L';
             insert_tree_23(NULL, &root, left_info, NULL);
             insert_tree_23(NULL, &root, right_info, NULL);
-            printf("no meio");
         }
 
         // Concatenar nós adjacentes
@@ -106,7 +104,8 @@ bool free_blocks(Tree23 *root, int start_block, int end_block) {
 
 
 // Função principal
-int main() {
+int main() 
+{
     Tree23 *root = NULL;
     Info rise;
 
@@ -114,6 +113,9 @@ int main() {
     insert_tree_23(NULL, &root, (Info){'O', 0, 9}, &rise);   // Nó ocupado: 0-9
     insert_tree_23(NULL, &root, (Info){'L', 10, 19}, &rise); // Nó livre: 10-19
     insert_tree_23(NULL, &root, (Info){'O', 20, 29}, &rise); // Nó ocupado: 20-29
+    // insert_tree_23(NULL, &root, (Info){'O', 30, 39}, &rise); // Nó ocupado: 20-29
+    // insert_tree_23(NULL, &root, (Info){'L', 40, 49}, &rise); // Nó ocupado: 20-29
+    // insert_tree_23(NULL, &root, (Info){'O', 50, 59}, &rise); // Nó ocupado: 20-29
 
     // Solicita ao usuário os blocos a liberar
     int start_block, end_block;

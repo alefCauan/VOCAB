@@ -32,7 +32,9 @@ typedef struct Zwei_drei_tree{
 
 Zwei_drei_tree *alloc_tree(Info info, Zwei_drei_tree *left, Zwei_drei_tree *mid, Zwei_drei_tree *right);
 
-void deallocate_tree(Zwei_drei_tree *root);
+void deallocate_tree(Zwei_drei_tree *no);
+
+void deallocate_tree2(Zwei_drei_tree **no);
 
 bool is_leaf(Zwei_drei_tree *root);
 
@@ -48,7 +50,73 @@ Zwei_drei_tree *break_node(Zwei_drei_tree **root, Info info, Info *rise, Zwei_dr
 
 Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info info, Info *rise);
 
-int remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info);
+/////////////////////////////////////////////////////////////////////////////////////////
+
+static int eh_info1(Zwei_drei_tree no, char *info);
+
+static int eh_info2(Zwei_drei_tree no, char *info);
+
+static int calcular_altura(Zwei_drei_tree *no);
+
+static int possivel_remover(Zwei_drei_tree *raiz);
+
+static Zwei_drei_tree *no23_juntar(Zwei_drei_tree *filho1, Info info, Zwei_drei_tree *maior, Zwei_drei_tree **raiz);
+
+Info no23_maior_info(Zwei_drei_tree *raiz);
+
+Zwei_drei_tree *arvore23_criar();
+
+Zwei_drei_tree *arvore23_buscar(Zwei_drei_tree *raiz, char *info);
+
+Zwei_drei_tree *arvore23_buscar_menor_filho(Zwei_drei_tree *raiz, Zwei_drei_tree **pai);
+
+Zwei_drei_tree *arvore23_buscar_maior_filho(Zwei_drei_tree *raiz, Zwei_drei_tree **pai, Info *maior_valor);
+
+Zwei_drei_tree *arvore23_buscar_pai(Zwei_drei_tree *raiz, char *info);
+
+Zwei_drei_tree *arvore23_buscar_maior_pai(Zwei_drei_tree *raiz, char *info);
+
+Zwei_drei_tree *arvore23_buscar_menor_pai(Zwei_drei_tree *raiz, char *info);
+
+static Zwei_drei_tree *arvore23_buscar_menor_pai_2_infos(Zwei_drei_tree *raiz, char *info);
+
+static int movimento_onda(Info saindo, Info *entrada, Zwei_drei_tree *pai, Zwei_drei_tree **origem, Zwei_drei_tree **raiz, Zwei_drei_tree **maior, int (*funcao_remover)(Zwei_drei_tree **, char *, Zwei_drei_tree *, Zwei_drei_tree **, Zwei_drei_tree **));
+
+static int arvore23_remover_no_interno1(Zwei_drei_tree **origem, Zwei_drei_tree* raiz, Info *info, Zwei_drei_tree *filho1, Zwei_drei_tree *filho2, Zwei_drei_tree **maior);
+
+static int arvore23_remover_no_interno2(Zwei_drei_tree **origem, Zwei_drei_tree* raiz, Info *info, Zwei_drei_tree *filho1, Zwei_drei_tree *filho2, Zwei_drei_tree **maior);
+
+int arvore23_remover1(Zwei_drei_tree **raiz, char *info, Zwei_drei_tree *pai, Zwei_drei_tree **origem, Zwei_drei_tree **maior);
+
+int arvore23_remover2(Zwei_drei_tree **raiz, char *info, Zwei_drei_tree *pai, Zwei_drei_tree **origem, Zwei_drei_tree **maior);
+
+int remove_23(Zwei_drei_tree **raiz, char *info);
+
+static int balanceamento(Zwei_drei_tree **raiz, Zwei_drei_tree *filho1, Zwei_drei_tree **filho2, Info info, Zwei_drei_tree **maior);
+
+int arvore23_rebalancear(Zwei_drei_tree **raiz, char *info, Zwei_drei_tree **maior);
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+
+void swap_info(Info *a, Info *b);
+
+// Função para encontrar o sucessor em ordem
+Zwei_drei_tree* find_min(Zwei_drei_tree *node);
+
+// Função para redistribuir nós quando necessário
+bool redistribute_nodes(Zwei_drei_tree **Dad, Zwei_drei_tree **root, bool is_left_sibling);
+
+// Função para fundir nós
+void merge_nodes(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Zwei_drei_tree *sibling);
+
+// Função principal de remoção em nó folha
+bool remove_from_leaf(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info);
+
+bool remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info);
+
+*/
 
 Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word, int *info);
 
