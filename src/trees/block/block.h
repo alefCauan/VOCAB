@@ -43,4 +43,39 @@ bool is_leaf(Tree23 *root);
 
 void concatenate_adjacent_nodes(Tree23 *root);
 
+static int remove_internal_node1(Tree23 **source, Tree23 *root, Info *info, Tree23 *child1, Tree23 *child2, Tree23 **bigger_node);
+
+static int remove_internal_node2(Tree23 **source, Tree23 *root, Info *info, Tree23 *child1, Tree23 *child2, Tree23 **bigger_node);
+
+static int balance_23(Tree23 **root, Tree23 *child1, Tree23 **child2, Info info, Tree23 **bigger_node);
+
+int rebalance_23(Tree23 **root, int start_block, Tree23 **bigger_node);
+
+static int balance_23(Tree23 **root, Tree23 *child1, Tree23 **child2, Info info, Tree23 **bigger_node);
+
+int remove_23(Tree23 **root, int start_block);
+
+static int wave(Info saindo, Info *input, Tree23 *dad, Tree23 **source, Tree23 **root, Tree23 **bigger_node, 
+                int (*remove_func)(Tree23 **, int, Tree23 *, Tree23 **, Tree23 **));
+
+int remove_wave1(Tree23 **root, int start_block, Tree23 *dad, Tree23 **source, Tree23 **bigger_node);
+
+int remove_wave2(Tree23 **root, int start_block, Tree23 *dad, Tree23 **source, Tree23 **bigger_node);
+
+static Tree23 *search_23_small_dad_info2(Tree23 *root, int start_block);
+
+Tree23 *search_23_small_dad(Tree23 *root, int start_block);
+
+Tree23 *search_23_bigger_dad(Tree23 *root, int start_block);
+
+Tree23 *search_23_dad(Tree23 *root, int start_block);
+
+Tree23 *search_23_bigger_child(Tree23 *root, Tree23 **dad, Info *bigger_value);
+Tree23 *search_23_lower_child(Tree23 *root, Tree23 **dad);
+static Tree23 *join_node(Tree23 *child1, Info info, Tree23 *bigger_node, Tree23 **root);
+static int is_removable(Tree23 *root);
+static int height(Tree23 *node);
+bool is_info2(Tree23 *node, int start_block, int end_block);
+bool is_info1(Tree23 *node, int start_block);
+
 #endif
