@@ -741,190 +741,6 @@ int rebalance_23(Zwei_drei_tree **root, char *info, Zwei_drei_tree **bigger_node
 }
 
 
-/*
-void swap_info(Info *a, Info *b) 
-{
-    Info temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-// Função para encontrar o sucessor em ordem
-Zwei_drei_tree* find_min(Zwei_drei_tree *node) 
-{
-    while (node->left != NULL) 
-        node = node->left;
-
-    return node;
-}
-
-// Função para redistribuir nós quando necessário
-bool redistribute_nodes(Zwei_drei_tree **Dad, Zwei_drei_tree **root, bool is_left_sibling) 
-{
-	bool redis = false;
-    Zwei_drei_tree *sibling;
-    
-    if (is_left_sibling) 
-	{
-        sibling = (*Dad)->left;
-        if (sibling->two_info) 
-		{
-            // Redistribui da esquerda para a direita
-            (*root)->info1 = (*Dad)->info1;
-            (*Dad)->info1 = sibling->info2;
-            sibling->two_info = false;
-            redis = true;
-        }
-    } 
-	else 
-	{
-        sibling = (*Dad)->mid;
-        if (sibling->two_info) {
-            // Redistribui da direita para a esquerda
-            (*root)->info1 = (*Dad)->info1;
-            (*Dad)->info1 = sibling->info1;
-            sibling->info1 = sibling->info2;
-            sibling->two_info = false;
-            redis = true;
-        }
-    }
-    return redis;
-}
-
-// Função para fundir nós
-void merge_nodes(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Zwei_drei_tree *sibling) 
-{
-    if (*root == (*Dad)->left) 
-	{
-        sibling->info2 = sibling->info1;
-        sibling->info1 = (*Dad)->info1;
-        sibling->two_info = true;
-        free(*root);
-        (*Dad)->left = (*Dad)->mid;
-        (*Dad)->mid = (*Dad)->right;
-        (*Dad)->right = NULL;
-    } 
-	else 
-	{
-        sibling->info2 = (*Dad)->info1;
-        sibling->two_info = true;
-        free(*root);
-        (*Dad)->mid = (*Dad)->right;
-        (*Dad)->right = NULL;
-    }
-}
-
-// Função principal de remoção em nó folha
-bool remove_from_leaf(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info) 
-{
-	bool removed = false;
-    if ((*root)->two_info) 
-	{
-        if (strcmp(info.br_word, (*root)->info2.br_word) == 0) 
-		{
-            (*root)->two_info = false;
-            removed =  true;
-        }
-        if (strcmp(info.br_word, (*root)->info1.br_word) == 0) 
-		{
-            (*root)->info1 = (*root)->info2;
-            (*root)->two_info = false;
-            removed =  true;
-        }
-        removed =  false;
-    }
-	else
-	{
-		// Caso 2: Nó tem uma informação
-		if (strcmp(info.br_word, (*root)->info1.br_word) == 0) 
-		{
-
-			if (*Dad == NULL) 
-			{
-				free(*root);
-				*root = NULL;
-				removed = true;
-			}
-			
-			// Tenta redistribuição
-			else if (*root == (*Dad)->left || *root == (*Dad)->mid) 
-			{
-				if (redistribute_nodes(Dad, root, *root == (*Dad)->mid)) 
-					removed = true;
-			}
-
-			if(!removed)
-			{
-				// Se não foi possível redistribuir, faz a fusão
-				if (*root == (*Dad)->left) 
-					merge_nodes(Dad, root, (*Dad)->mid);
-				else if (*root == (*Dad)->mid) 
-					merge_nodes(Dad, root, (*Dad)->left);
-				else 
-					merge_nodes(Dad, root, (*Dad)->mid);
-				
-				// Se o dad ficou sem informações, precisa reorganizar a árvore
-				if ((*Dad)->mid == NULL) 
-				{
-					Zwei_drei_tree *temp = *Dad;
-					*Dad = (*Dad)->left;
-					free(temp);
-				}
-
-				removed =  true;
-			}
-
-		}
-	}
-
-    
-    return removed;
-}
-
-// Função principal de remoção
-bool remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info) 
-{
-	bool removed = false;
-
-    if (*root != NULL) 
-	{
-		// Se é folha, remove diretamente
-		if (is_leaf(*root)) 
-		{
-			////////////////////////////////////////////
-			removed = remove_from_leaf(Dad, root, info);
-		}
-		else
-		{
-
-			// Se não é folha, navega até encontrar o nó apropriado
-			if (strcmp(info.br_word, (*root)->info1.br_word) < 0) 
-				removed = remove_23(root, &(*root)->left, info);
-			else if (strcmp(info.br_word, (*root)->info1.br_word) == 0) 
-			{
-				Zwei_drei_tree *successor = find_min((*root)->mid);
-				swap_info(&(*root)->info1, &successor->info1);
-				removed = remove_23(root, &(*root)->mid, info);
-			}
-			else if (!(*root)->two_info || strcmp(info.br_word, (*root)->info2.br_word) < 0) 
-				removed = remove_23(root, &(*root)->mid, info);
-			else if ((*root)->two_info && strcmp(info.br_word, (*root)->info2.br_word) == 0) 
-			{
-				Zwei_drei_tree *successor = find_min((*root)->right);
-				swap_info(&(*root)->info2, &successor->info1);
-				removed = remove_23(root, &(*root)->right, info);
-			}
-			else if ((*root)->two_info) 
-				removed = remove_23(root, &(*root)->right, info);
-		}
-        
-    }
-    
-    return removed;
-}
-*/
-
-
 // Função para imprimir a árvore (apenas para verificação)
 void print_tree(Zwei_drei_tree *root, int level) 
 {
@@ -966,7 +782,7 @@ void print_bin_tree(Zwei_drei_tree *root, int level)
 	}
 }
 
-Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word, int *info) 
+Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word) 
 {
 	Zwei_drei_tree *result;
 	result = NULL;
@@ -976,24 +792,18 @@ Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word, int *i
 	{
 		// Verifica o primeiro item (info1)
 		if (strcmp(br_word, root->info1.br_word) == 0) 
-		{
-			*info = 1;
 			result = root;
-		}
 		// Verifica o segundo item (info2), se existir
 		else if (root->two_info && strcmp(br_word, root->info2.br_word) == 0) 
-		{
-			*info = 2;
 			result = root;
-		}
 		else
 		{
 			if (strcmp(br_word, root->info1.br_word) < 0) 
-				result = search_23_tree(root->left, br_word, info);  
+				result = search_23_tree(root->left, br_word);  
 			else if (!root->two_info || strcmp(br_word, root->info2.br_word) < 0) 
-				result = search_23_tree(root->mid, br_word, info);  
+				result = search_23_tree(root->mid, br_word);  
 			else 
-				result = search_23_tree(root->right, br_word, info); 
+				result = search_23_tree(root->right, br_word); 
 		}
 
 	}

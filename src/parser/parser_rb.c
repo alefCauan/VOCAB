@@ -53,23 +53,40 @@ void scan_file_line_rb(Red_black_tree **root)
 // Função para inserir vocabulário na árvore
 void insert_vocabulary_rb(Red_black_tree **root, char *translation, char *english_word, int unit) 
 {
-    Red_black_tree *result = search_rb(*root, translation);
-    Info_bin info_bin;
-
-    info_bin.unit = unit;
+    Info_bin info_bin = {
+        .unit = unit
+    };
     strcpy(info_bin.eng_word, english_word);
 
-    if (result) 
-        register_bin(&result->info.eng_words, info_bin);
-    else 
-    {
-        Info_rb new_info;
+    Info_rb new_info = {
+        .eng_words = allocate_binary(info_bin),
+        .unit = unit
+    };
+    strcpy(new_info.br_word, translation);
 
-        strcpy(new_info.br_word, translation);
-        new_info.unit = unit;
-        new_info.eng_words = NULL;
+    *root = insert_rb(*root, new_info);
 
-        register_bin(&new_info.eng_words, info_bin);
-        *root = insert_rb(*root, new_info);
-    }
 }
+// // Função para inserir vocabulário na árvore
+// void insert_vocabulary_rb(Red_black_tree **root, char *translation, char *english_word, int unit) 
+// {
+//     Red_black_tree *result = search_rb(*root, translation);
+//     Info_bin info_bin;
+
+//     info_bin.unit = unit;
+//     strcpy(info_bin.eng_word, english_word);
+
+//     if (result) 
+//         register_bin(&result->info.eng_words, info_bin);
+//     else 
+//     {
+//         Info_rb new_info;
+
+//         strcpy(new_info.br_word, translation);
+//         new_info.unit = unit;
+//         new_info.eng_words = NULL;
+
+//         register_bin(&new_info.eng_words, info_bin);
+//         *root = insert_rb(*root, new_info);
+//     }
+// }

@@ -126,7 +126,7 @@ Red_black_tree *insert_rb(Red_black_tree *root, Info_rb info)
         else if (strcmp(info.br_word, root->info.br_word) > 0)
             root->right = insert_rb(root->right, info);
         else
-            insert_bin(root->info.eng_words, info.eng_words);
+            insert_bin(&(root->info.eng_words), info.eng_words);
     }
         
 
@@ -260,7 +260,8 @@ bool remove_node(Red_black_tree **root, const char *word)
             }
             else 
             {
-                if ((*root)->right && color((*root)->right) == BLACK && color((*root)->right->left) == BLACK) 
+                if ((*root)->right && color((*root)->right) == BLACK 
+                    && color((*root)->right->left) == BLACK) 
                     move_right(root);
 
                 found = remove_node(&((*root)->right), word);
@@ -367,9 +368,12 @@ void remove_port_word_rb(Red_black_tree **root, Info_rb info)
 		{
 			// Encontrou o nó correspondente para remoção
 			if (strcmp(info.br_word, (*root)->info.br_word) == 0) 
-				remove_all_eng_words_rb(root, (*root)->info.eng_words);
+            {
+				if(remove_eng_word_bin_unit(&((*root)->info.eng_words), (Info_bin){.eng_word="", info.unit}) 
+                    && is_binary_tree_empty((*root)->info.eng_words))
+                    remove_rb(root, info.br_word);
+            }
 			
-            remove_rb(root, (*root)->info.br_word);
 		}
 	} 
 }
