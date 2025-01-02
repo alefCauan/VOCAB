@@ -1038,33 +1038,13 @@ void show_eng_words(Zwei_drei_tree *root, const char *br_word)
         strcpy(normalized_br_word, br_word);
         trim_string(normalized_br_word);
 
-		char normalized_info1[256];
-        strcpy(normalized_info1, root->info1.br_word);
-        trim_string(normalized_info1);
-
-		char normalized_info2[256];
-		if(root->two_info)
+        if (strcmp(normalized_br_word, root->info1.br_word) == 0) 
 		{
-			strcpy(normalized_info2, root->info2.br_word);
-			trim_string(normalized_info2);
-		}
-
-		// if (!root->two_info)
-        //     printf("%s - %s - %d\n", normalized_info1, normalized_br_word, strcmp(normalized_br_word, normalized_info1));
-        // else {
-        //     printf("%s - %s - %d\n", normalized_info1, normalized_br_word, strcmp(normalized_info1, normalized_br_word));
-        //     printf("%s - %s - %d\n", normalized_info2, normalized_br_word, strcmp(normalized_info2, normalized_br_word));
-        // }
-
-        if (strcmp(normalized_br_word, normalized_info1) == 0) 
-		{
-			printf("Entrou\n");
             show_all_eng_words(root->info1.eng_words);
             printf("\n");
         }
-        if (root->two_info && strcmp(normalized_br_word, normalized_info2) == 0) 
+        if (root->two_info && strcmp(normalized_br_word, root->info2.br_word) == 0) 
 		{
-			printf("Entrou\n");
             show_all_eng_words(root->info2.eng_words);
             printf("\n");
         }
@@ -1085,28 +1065,20 @@ void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin)
 		removed = remove_eng_word_bin(&(*root)->info1.eng_words, info_bin);
 
 		if (removed && is_binary_tree_empty((*root)->info1.eng_words)) 
-		{
-			printf("Entrei 1\n");
 			remove_23(root, (*root)->info1.br_word);
-		}
 
 		if (!removed && (*root)->two_info) 
 		{
 			removed = remove_eng_word_bin(&(*root)->info2.eng_words, info_bin);
 
 			if (removed && is_binary_tree_empty((*root)->info2.eng_words)) 
-			{
-				printf("Entrei 2\n");
 				remove_23(root, (*root)->info2.br_word);
-			}
 		}
 
 		remove_eng_word(&(*root)->left, info_bin);
 		remove_eng_word(&(*root)->mid, info_bin);
 		remove_eng_word(&(*root)->right, info_bin);
-
 	}
-
 }
 
 void remove_all_eng_words(Zwei_drei_tree **root, Binary_tree *eng_words)
@@ -1123,72 +1095,27 @@ void remove_all_eng_words(Zwei_drei_tree **root, Binary_tree *eng_words)
 void remove_port_word(Zwei_drei_tree **root, Info info) 
 {
     if (*root)
-	{
-		if (strcmp(info.br_word, (*root)->info1.br_word) < 0) 
-			remove_port_word(&(*root)->left, info);
-		else if (!(*root)->two_info || strcmp(info.br_word, (*root)->info1.br_word) > 0) 
-			remove_port_word(&(*root)->mid, info);
-		else if ((*root)->two_info) 
-			remove_port_word(&(*root)->right, info);
-		else 
-		{
-			// Encontrou o nó correspondente para remoção
-			if (strcmp(info.br_word, (*root)->info1.br_word) == 0) 
-				remove_all_eng_words(root, (*root)->info1.eng_words);
-			else if ((*root)->two_info && strcmp(info.br_word, (*root)->info2.br_word) == 0) 
-				remove_all_eng_words(root, (*root)->info2.eng_words);
-			
-			remove_23(root, info.br_word);
-		}
-	} 
+    {
+        if (strcmp(info.br_word, (*root)->info1.br_word) < 0) 
+            remove_port_word(&(*root)->left, info);
+        else if ((*root)->two_info && strcmp(info.br_word, (*root)->info1.br_word) > 0 && strcmp(info.br_word, (*root)->info2.br_word) < 0) 
+            remove_port_word(&(*root)->mid, info);
+        else if ((*root)->two_info && strcmp(info.br_word, (*root)->info2.br_word) > 0) 
+            remove_port_word(&(*root)->right, info);
+        else 
+        {
+            if (strcmp(info.br_word, (*root)->info1.br_word) == 0) 
+            {
+                if (remove_eng_word_bin_unit(&(*root)->info1.eng_words, (Info_bin){.eng_word = "", .unit = info.unit}) && is_binary_tree_empty((*root)->info1.eng_words)) 
+                    remove_23(root, info.br_word);
+            }
+            else if ((*root)->two_info && strcmp(info.br_word, (*root)->info2.br_word) == 0) 
+            {
+                if (remove_eng_word_bin_unit(&(*root)->info2.eng_words, (Info_bin){.eng_word = "", .unit = info.unit}) && is_binary_tree_empty((*root)->info2.eng_words)) 
+                    remove_23(root, info.br_word);
+            }
+        }
+    }
 }
 
 
-
-// /////////////////////////////////////////////////////////////////////////////////////////
-
-// static int is_info1(Zwei_drei_tree node, char *info);
-
-// static int is_info2(Zwei_drei_tree node, char *info);
-
-// static int height(Zwei_drei_tree *node);
-
-// static int is_removable(Zwei_drei_tree *root);
-
-// static Zwei_drei_tree *join_node(Zwei_drei_tree *child1, Info info, Zwei_drei_tree *bigger_node, Zwei_drei_tree **root);
-
-// Info bigger_info_node(Zwei_drei_tree *root);
-
-// Zwei_drei_tree *arvore23_criar();
-
-// Zwei_drei_tree *search_23(Zwei_drei_tree *root, char *info);
-
-// Zwei_drei_tree *search_23_lower_child(Zwei_drei_tree *root, Zwei_drei_tree **dad);
-
-// Zwei_drei_tree *search_23_bigger_child(Zwei_drei_tree *root, Zwei_drei_tree **dad, Info *bigger_value);
-
-// Zwei_drei_tree *search_23_dad(Zwei_drei_tree *root, char *info);
-
-// Zwei_drei_tree *search_23_bigger_dad(Zwei_drei_tree *root, char *info);
-
-// Zwei_drei_tree *search_23_small_dad(Zwei_drei_tree *root, char *info);
-
-// static Zwei_drei_tree *search_23_small_dad_info2(Zwei_drei_tree *root, char *info);
-
-// static int wave(Info saindo, Info *input, Zwei_drei_tree *dad, Zwei_drei_tree **source, Zwei_drei_tree **root, Zwei_drei_tree **bigger_node, int (*remove_func)(Zwei_drei_tree **, char *, Zwei_drei_tree *, Zwei_drei_tree **, Zwei_drei_tree **));
-
-// static int remove_internal_node1(Zwei_drei_tree **source, Zwei_drei_tree* root, Info *info, Zwei_drei_tree *child1, Zwei_drei_tree *child2, Zwei_drei_tree **bigger_node);
-
-// static int remove_internal_node2(Zwei_drei_tree **source, Zwei_drei_tree* root, Info *info, Zwei_drei_tree *child1, Zwei_drei_tree *child2, Zwei_drei_tree **bigger_node);
-
-// int remove_wave1(Zwei_drei_tree **root, char *info, Zwei_drei_tree *dad, Zwei_drei_tree **source, Zwei_drei_tree **bigger_node);
-
-// int remove_wave2(Zwei_drei_tree **root, char *info, Zwei_drei_tree *dad, Zwei_drei_tree **source, Zwei_drei_tree **bigger_node);
-
-// int remove_23(Zwei_drei_tree **root, char *info);
-
-// static int balance_23(Zwei_drei_tree **root, Zwei_drei_tree *child1, Zwei_drei_tree **child2, Info info, Zwei_drei_tree **bigger_node);
-
-// int rebalance_23(Zwei_drei_tree **root, char *info, Zwei_drei_tree **bigger_node);
-
-// /////////////////////////////////////////////////////////////////////////////////////////

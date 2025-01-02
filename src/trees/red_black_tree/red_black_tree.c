@@ -126,7 +126,7 @@ Red_black_tree *insert_rb(Red_black_tree *root, Info_rb info)
         else if (strcmp(info.br_word, root->info.br_word) > 0)
             root->right = insert_rb(root->right, info);
         else
-            printf("TODO\n"); // TODO: INSERT BB
+            insert_bin(root->info.eng_words, info.eng_words);
     }
         
 
