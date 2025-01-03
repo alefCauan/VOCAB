@@ -22,21 +22,21 @@ int main() {
 
     // Caso 1: Remoção de um nó sem filhos
     printf("Removendo 'dog' (nó sem filhos):\n");
-    Info_bin target1 = {"dog"};
-    remove_eng_word_bin(&root, target1);
+    Info_bin target1 = {"dog", 1};
+    remove_eng_word_bin(&root, words[3]);
     print_binary_tree(root, 0);
     printf("\n");
 
     // Caso 2: Remoção de um nó com um filho
     printf("Removendo 'cat' (nó com um filho):\n");
-    Info_bin target2 = {"cat"};
-    remove_eng_word_bin(&root, target2);
+    Info_bin target2 = {"cat", 1};
+    remove_eng_word_bin(&root, words[6]);
     print_binary_tree(root, 0);
     printf("\n");
 
     // Caso 3: Remoção de um nó com dois filhos
     printf("Removendo 'house' (nó com dois filhos):\n");
-    Info_bin target3 = {"house"};
+    Info_bin target3 = {"house", 1};
     remove_eng_word_bin(&root, target3);
     print_binary_tree(root, 0);
     printf("\n");

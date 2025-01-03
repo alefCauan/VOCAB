@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <limits.h>
 #include "../utils/aux.h"
 #include "../trees/tree_23/tree_23.h"
 
@@ -14,6 +15,7 @@
 #define BR_TOKEN   ","
 #define END_TOKEN  ";"
 #define PARSER_PATH "/home/alef/programas/VOCAB/src/parser/vocabulary.txt"
+
 
 FILE *_open_file(const char *file_name, const char *type);
 

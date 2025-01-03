@@ -134,7 +134,41 @@ bool remove_eng_word_bin(Binary_tree **root, Info_bin info_bin)
     bool result = true;
 
     // Procura o nó a ser removido
-    while (current != NULL && strcmp(info_bin.eng_word, current->info.eng_word) != 0) 
+    while (current != NULL && strcmp(info_bin.eng_word, current->info.eng_word) != 0)
+    {
+        parent = current;
+        if (strcmp(info_bin.eng_word, current->info.eng_word) > 0)
+            current = current->right;
+        else
+            current = current->left;
+    }
+
+    // Se o nó não for encontrado
+    if (current != NULL && info_bin.unit == current->info.unit)
+    {
+        if (current->left == NULL && current->right == NULL)
+            remove_eng_word_no_children(root, current, parent);
+        else if (current->left != NULL && current->right != NULL)
+            remove_eng_word_two_children(root, current);
+        else 
+            remove_eng_word_one_child(root, current, parent);
+    }
+    else
+        result = false;
+
+    return result;
+}
+
+bool remove_eng_word_bin_unit(Binary_tree **root, Info_bin info_bin)
+{
+    Binary_tree *current;
+    current = *root;
+    Binary_tree *parent;
+    parent = NULL;
+    bool result = true;
+
+    // Procura o nó a ser removido
+    while (current != NULL && info_bin.unit != (*root)->info.unit)
     {
         parent = current;
         if (strcmp(info_bin.eng_word, current->info.eng_word) > 0)
@@ -184,7 +218,7 @@ void show_all_eng_words(Binary_tree *root)
     if(root)
     {
         show_all_eng_words(root->left);
-        printf("  %s", root->info.eng_word);
+        printf("  %s - unidade %d\n", root->info.eng_word, root->info.unit);
         show_all_eng_words(root->right);
     }
 }

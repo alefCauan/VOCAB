@@ -6,7 +6,7 @@ SCR_BLOCK="block.c"
 OUT="teste_c"
 
 
-gcc -g -o $OUT  $SCR_BLOCK $SRC_AUX $SRC_MAIN 
+gcc -g -o $OUT $SCR_BLOCK $SRC_AUX $SRC_MAIN 
 
 # rm *.o
 ./$OUT

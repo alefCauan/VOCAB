@@ -64,8 +64,6 @@ static Zwei_drei_tree *join_node(Zwei_drei_tree *filho1, Info info, Zwei_drei_tr
 
 Info bigger_info_node(Zwei_drei_tree *raiz);
 
-Zwei_drei_tree *arvore23_criar();
-
 Zwei_drei_tree *search_23(Zwei_drei_tree *raiz, char *info);
 
 Zwei_drei_tree *search_23_lower_child(Zwei_drei_tree *raiz, Zwei_drei_tree **pai);
@@ -96,29 +94,8 @@ static int balance_23(Zwei_drei_tree **raiz, Zwei_drei_tree *filho1, Zwei_drei_t
 
 int rebalance_23(Zwei_drei_tree **raiz, char *info, Zwei_drei_tree **maior);
 
-/////////////////////////////////////////////////////////////////////////////////////////
 
-/*
-
-void swap_info(Info *a, Info *b);
-
-// Função para encontrar o sucessor em ordem
-Zwei_drei_tree* find_min(Zwei_drei_tree *node);
-
-// Função para redistribuir nós quando necessário
-bool redistribute_nodes(Zwei_drei_tree **Dad, Zwei_drei_tree **root, bool is_left_sibling);
-
-// Função para fundir nós
-void merge_nodes(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Zwei_drei_tree *sibling);
-
-// Função principal de remoção em nó folha
-bool remove_from_leaf(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info);
-
-bool remove_23(Zwei_drei_tree **Dad, Zwei_drei_tree **root, Info info);
-
-*/
-
-Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word, int *info);
+Zwei_drei_tree *search_23_tree(Zwei_drei_tree *root, const char *br_word);
 
 void print_tree(Zwei_drei_tree *root, int level); 
 
@@ -152,7 +129,7 @@ void remove_all_eng_words(Zwei_drei_tree **root, Binary_tree *eng_words);
 (iv)informar uma palavra em português e a unidade a qual a mesma pertence e então remove-la, para isto
 deve remover a palavra em inglês da árvore binária correspondente a palavra em português da mesma
 unidade. Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da
-árvore 2-3. []
+árvore 2-3. [x]
 */ 
 void remove_port_word(Zwei_drei_tree **root, Info info);
 

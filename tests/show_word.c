@@ -32,7 +32,7 @@ int main()
     // insert_vocabulary(&root, "casa", "home", 1);
     // insert_vocabulary(&root, "casa", "residence", 1);
 
-    // show_all_eng_words(root->info1.eng_words);  // Deve exibir: house, home, residence
+    show_all_eng_words(root->info1.eng_words);  // Deve exibir: house, home, residence
 
     deallocate_tree(root);
 

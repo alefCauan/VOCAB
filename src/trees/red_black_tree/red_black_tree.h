@@ -156,14 +156,30 @@ bool remove_node(Red_black_tree **H, const char *word);
 bool remove_rb(Red_black_tree **root, const char *word);
 
 
+/*
+(i) informar uma unidade e então imprima todas as palavras da unidade em português seguida das
+equivalentes em inglês; [x]
+*/
 void show_port_and_eng_words_rb(Red_black_tree *root, int unit);
-
+/*
+(ii)informar uma palavra em português e então imprima todas as palavras em inglês equivalente a palavra em
+português dada, independente da unidade; [x]
+*/
 void show_eng_words_rb(Red_black_tree *root, const char *br_word);
-
+/*
+(iii)informar uma palavra em inglês e e a unidade a qual a mesma pertence remove-la das árvores binárias
+das quais ela pertence. Caso ela seja a única palavra em uma das árvores binárias, remover também da
+árvore 2-3; [x]
+*/
 void remove_eng_word_rb(Red_black_tree **root, Info_bin info_bin);
 
 void remove_all_eng_words_rb(Red_black_tree **root, Binary_tree *eng_words);
-
+/*
+(iv)informar uma palavra em português e a unidade a qual a mesma pertence e então remove-la, para isto
+deve remover a palavra em inglês da árvore binária correspondente a palavra em português da mesma
+unidade. Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da
+árvore 2-3. []
+*/ 
 void remove_port_word_rb(Red_black_tree **root, Info_rb info);
 
 #endif // RED_BLACK_TREE_H
