@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SRC_RB="trees/red_black_tree/red_black_tree.c"
 SRC_BIN="trees/binary_tree/binary.c"
 SRC_AUX="utils/aux.c"
