@@ -1,7 +1,7 @@
 #include "../trees/tree_23/tree_23.h"
 #include <time.h>
 
-#define INFO_SIZE 100 * 1000
+#define INFO_SIZE 10000
 
 
 Zwei_drei_tree *search_23_path(Zwei_drei_tree *root, char *info, int level)

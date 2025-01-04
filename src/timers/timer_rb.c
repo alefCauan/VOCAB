@@ -2,7 +2,7 @@
 
 #include <time.h>
 
-#define INFO_SIZE 100 * 100
+#define INFO_SIZE 10000
 
 
 Red_black_tree *search_rb_path(Red_black_tree *root, char *info, int level)
