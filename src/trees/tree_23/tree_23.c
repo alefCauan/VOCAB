@@ -198,12 +198,12 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 	return b_node;
 }
 
-static int is_info1(Zwei_drei_tree node, char *info)
+int is_info1(Zwei_drei_tree node, char *info)
 {
     return strcmp(info, node.info1.br_word) == 0;
 }
 
-static int is_info2(Zwei_drei_tree node, char *info)
+int is_info2(Zwei_drei_tree node, char *info)
 {
     return node.two_info && (strcmp(info, node.info2.br_word) == 0);
 }

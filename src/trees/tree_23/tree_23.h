@@ -52,9 +52,9 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-static int is_info1(Zwei_drei_tree no, char *info);
+int is_info1(Zwei_drei_tree no, char *info);
 
-static int is_info2(Zwei_drei_tree no, char *info);
+int is_info2(Zwei_drei_tree no, char *info);
 
 static int height(Zwei_drei_tree *no);
 
