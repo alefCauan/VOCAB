@@ -41,7 +41,7 @@ void print_tree_in_order(Tree23 *root);
 
 bool is_leaf(Tree23 *root);
 
-void concatenate_adjacent_nodes(Tree23 *root);
+void concatenate_adjacent_nodes(Tree23 *root, Tree23 *original, Info info);
 
 static int remove_internal_node1(Tree23 **source, Tree23 *root, Info *info, Tree23 *child1, Tree23 *child2, Tree23 **bigger_node);
 
