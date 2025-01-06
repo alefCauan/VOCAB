@@ -215,14 +215,55 @@ void print_tree_in_order(Tree23 *root) {
     }
 }
 
-// Função para concatenar nós adjacentes com o mesmo status
-void concatenate_adjacent_nodes(Tree23 *root) {
-    // TODO: CONCATENAÇÃO DOS NÓS COM A FUNCÇÃO DE REMOVER 
+void concatenate_adjacent_nodes(Tree23 *root, Tree23 *original, Info info) {
+    Tree23 *next_value;
+    Tree23 *prev_value;
+
+    // Verifica se o nó atual é uma folha
+    if (is_leaf(root)) {
+        // Busca o próximo nó adjacente maior (vizinho direto)
+        next_value = search_23_small_dad(original, info.start_block);
+
+        // Caso exista um próximo nó adjacente maior com o mesmo status
+        if (next_value && next_value->info1.status == info.status &&
+            next_value->info1.start_block == info.end_block + 1) { // Verifica se é diretamente adjacente
+
+            // Atualiza o intervalo do nó atual para englobar o próximo bloco
+            root->info1.end_block = next_value->info1.end_block;
+
+            // Remove o próximo
+            remove_23(&original, next_value->info1.start_block);
+        }
+
+        // Busca o próximo nó adjacente menor (vizinho direto)
+        prev_value = search_23_bigger_dad(original, info.start_block);
+
+        // Caso exista um próximo nó adjacente menor com o mesmo status
+        if (prev_value && prev_value->info1.status == info.status &&
+            prev_value->info1.end_block == info.start_block - 1) { // Verifica se é diretamente adjacente
+
+            // Atualiza o intervalo do menor pai para englobar o nó atual
+            prev_value->info1.end_block = root->info1.end_block;
+
+            // Remove o nó atual
+            remove_23(&original, root->info1.start_block);
+        }
+    } else {
+        // Caso o nó não seja folha, aplica a lógica recursivamente nos filhos
+        if (root->left_child) {
+            concatenate_adjacent_nodes(root->left_child, original, root->info1);
+        }
+        if (root->middle_child) {
+            concatenate_adjacent_nodes(root->middle_child, original, root->info1);
+        }
+        if (root->right_child) {
+            concatenate_adjacent_nodes(root->right_child, original, root->info2);
+        }
+    }
 }
 
 
 bool is_info1(Tree23 *node, int start_block) {
-    if (node == NULL) return false; // Evita acesso inválido à memória
     return node->info1.start_block == start_block;
 }
 

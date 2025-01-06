@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "block.h" // Assuma que contém as definições de Tree23 e Info
-
-bool allocate_blocks(Tree23 *root, int required_blocks) {
+bool allocate_blocks(Tree23 *root, Tree23 *original, int required_blocks) {
     bool allocation_result = false; // Variável auxiliar para armazenar o resultado da alocação
 
     if (root == NULL) {
@@ -30,8 +29,8 @@ bool allocate_blocks(Tree23 *root, int required_blocks) {
                 insert_tree_23(NULL, &root, remaining_info, NULL);
             }
 
-            // Concatenar nós adjacentes
-            concatenate_adjacent_nodes(root);
+            // Concatenar nós adjacentes após a alocação
+            concatenate_adjacent_nodes(root, original, root->info1);
             allocation_result = true;
         }
 
@@ -58,20 +57,20 @@ bool allocate_blocks(Tree23 *root, int required_blocks) {
                 insert_tree_23(NULL, &root, remaining_info, NULL);
             }
 
-            // Concatenar nós adjacentes
-            concatenate_adjacent_nodes(root);
+            // Concatenar nós adjacentes após a alocação
+            concatenate_adjacent_nodes(root, original, root->info2);
             allocation_result = true;
         }
 
         // Procura nos filhos se a alocação ainda não foi realizada
         if (!allocation_result) {
-            allocation_result = allocate_blocks(root->left_child, required_blocks) ||
-                                allocate_blocks(root->middle_child, required_blocks) ||
-                                (root->two_info && allocate_blocks(root->right_child, required_blocks));
+            allocation_result = allocate_blocks(root->left_child, original, required_blocks) ||
+                                allocate_blocks(root->middle_child, original, required_blocks) ||
+                                (root->two_info && allocate_blocks(root->right_child, original, required_blocks));
         }
     }
 
-    return allocation_result; // Retorna o resultado da alocação
+    return allocation_result; 
 }
 
 
@@ -82,7 +81,7 @@ int main() {
     Info rise;
     insert_tree_23(NULL, &root, (Info){'L', 0, 9}, &rise);  // Blocos 0 a 9 livres
     insert_tree_23(NULL, &root, (Info){'O', 10, 19}, &rise); // Blocos 20 a 29 ocupados
-    insert_tree_23(NULL, &root, (Info){'L', 20, 29}, &rise); // Blocos 10 a 19 livres
+    insert_tree_23(NULL, &root, (Info){'L', 20, 34}, &rise); // Blocos 10 a 19 livres
 
     // Solicita ao usuário a quantidade de blocos necessários
     int required_blocks;
@@ -90,7 +89,7 @@ int main() {
     scanf("%d", &required_blocks);
 
     // Tenta alocar os blocos
-    if (!allocate_blocks(root, required_blocks)) {
+    if (!allocate_blocks(root, root, required_blocks)) {
         printf("Não há blocos livres suficientes para alocar %d blocos.\n", required_blocks);
     }
 

@@ -3,12 +3,10 @@
 #include "block.h" // Assuma que contém as definições de Tree23 e Info
 
 
-bool free_blocks(Tree23 *root, int start_block, int end_block) {
+bool free_blocks(Tree23 *root, Tree23 *original, int start_block, int end_block) {
     bool free_result = false;
 
-    if (root == NULL) {
-        return free_result; // Árvore vazia
-    }
+    if (root != NULL) {
 
     // Verifica se o primeiro intervalo (info1) contém os blocos a serem liberados
     if (root->info1.status == 'O' &&
@@ -47,8 +45,9 @@ bool free_blocks(Tree23 *root, int start_block, int end_block) {
         }
 
         // Concatenar nós adjacentes
-        concatenate_adjacent_nodes(root);
+        concatenate_adjacent_nodes(root, original, root->info1);
         free_result = true;
+        }
     }
 
     // Verifica se o segundo intervalo (info2) contém os blocos a serem liberados
@@ -88,15 +87,15 @@ bool free_blocks(Tree23 *root, int start_block, int end_block) {
         }
 
         // Concatenar nós adjacentes
-        concatenate_adjacent_nodes(root);
+        concatenate_adjacent_nodes(root, original, root->info2);
         free_result = true;
     }
 
     // Procura nos filhos se a liberação ainda não foi realizada
     if (!free_result) {
-        free_result = free_blocks(root->left_child, start_block, end_block) ||
-                      free_blocks(root->middle_child, start_block, end_block) ||
-                      (root->two_info && free_blocks(root->right_child, start_block, end_block));
+        free_result = free_blocks(root->left_child, original, start_block, end_block) ||
+                      free_blocks(root->middle_child, original, start_block, end_block) ||
+                      (root->two_info && free_blocks(root->right_child, original, start_block, end_block));
     }
 
     return free_result;
@@ -113,9 +112,6 @@ int main()
     insert_tree_23(NULL, &root, (Info){'O', 0, 9}, &rise);   // Nó ocupado: 0-9
     insert_tree_23(NULL, &root, (Info){'L', 10, 19}, &rise); // Nó livre: 10-19
     insert_tree_23(NULL, &root, (Info){'O', 20, 29}, &rise); // Nó ocupado: 20-29
-    // insert_tree_23(NULL, &root, (Info){'O', 30, 39}, &rise); // Nó ocupado: 20-29
-    // insert_tree_23(NULL, &root, (Info){'L', 40, 49}, &rise); // Nó ocupado: 20-29
-    // insert_tree_23(NULL, &root, (Info){'O', 50, 59}, &rise); // Nó ocupado: 20-29
 
     // Solicita ao usuário os blocos a liberar
     int start_block, end_block;
@@ -123,7 +119,7 @@ int main()
     scanf("%d %d", &start_block, &end_block);
 
     // Tenta liberar os blocos
-    if (!free_blocks(root, start_block, end_block)) {
+    if (!free_blocks(root, root, start_block, end_block)) {
         printf("Não foi possível liberar os blocos %d - %d.\n", start_block, end_block);
     }
 
