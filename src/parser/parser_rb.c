@@ -54,7 +54,7 @@ void scan_file_line_rb(Red_black_tree **root)
 void insert_vocabulary_rb(Red_black_tree **root, char *translation, char *english_word, int unit) 
 {
     Info_bin info_bin = {
-        .unit = unit
+        .units = create_list(unit)
     };
     strcpy(info_bin.eng_word, english_word);
 

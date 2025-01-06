@@ -1,17 +1,21 @@
 #ifndef BINARY_H
 #define BINARY_H
 
-// #include "../../../includes/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+typedef struct Unit
+{
+    int unit;
+    struct Unit *next;
+} Unit;
 
 // struct da arvore BINARIA
 typedef struct Info_bin{
     ///////////////////
     char eng_word[25];
-    int unit;
+    Unit *units;
     //////////////////
 }Info_bin;
 
@@ -23,6 +27,7 @@ typedef struct Binary_tree{
     struct Binary_tree *right;
     ////////////////////////////
 }Binary_tree;
+
 
 Binary_tree *allocate_binary(Info_bin info);
 
@@ -49,5 +54,19 @@ void print_binary_tree(Binary_tree *root, int level);
 void show_all_eng_words(Binary_tree *root);
 
 bool is_binary_tree_empty(Binary_tree *root);
+
+Unit *allocate_list();
+
+Unit *create_list(int unit);
+
+void deallocate_list(Unit **lista);
+
+void insert_list(Unit **lista, int unit);
+
+void show_list(Unit *lista);
+
+Unit *search_list(Unit *lista, int unit);
+
+int remove_list(Unit **lista, int unit);
 
 #endif

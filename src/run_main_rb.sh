@@ -9,4 +9,4 @@ OUT="run_main_rb"
 
 gcc -g -o ../bin/$OUT $SRC_RB $SRC_BIN $SRC_PARSER $SRC_AUX main_rb.c
 
-../bin/$OUT
+gdb ../bin/$OUT

@@ -39,12 +39,15 @@ int main()
             }
             case 3: 
             {
+                int unit;
                 Info_bin info_bin;
                 printf("Informe a palavra em inglês: ");
                 setbuf(stdin, NULL);
                 scanf("%s", info_bin.eng_word);
                 printf("Informe a unidade: ");
-                scanf("%d", &info_bin.unit);
+                scanf("%d", &unit);
+                info_bin.units = create_list(unit);
+                
                 remove_eng_word_rb(&root, info_bin);
                 break;
             }
