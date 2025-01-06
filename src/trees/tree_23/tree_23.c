@@ -819,18 +819,20 @@ void show_port_and_eng_words(Zwei_drei_tree *root, int unit)
 	{
 		if (root->info1.unit == unit)
 		{
+            printf("\n-------------------------------------\n");
 			printf("PORTUGUES: %s\n", root->info1.br_word);
-			printf("  Traduções em inglês:");
+			printf("- inglês: \n");
             show_all_eng_words(root->info1.eng_words);
-            printf("\n");
+            printf("-------------------------------------\n");
 		}
 
 		if (root->two_info && root->info2.unit == unit)
 		{
+            printf("\n-------------------------------------\n");
 			printf("PORTUGUES: %s\n", root->info2.br_word);
-			printf("  Traduções em inglês:");
+			printf("- inglês: \n");
             show_all_eng_words(root->info2.eng_words);
-            printf("\n");
+            printf("-------------------------------------\n");
 		}
 	
 		show_port_and_eng_words(root->left, unit);
@@ -850,13 +852,16 @@ void show_eng_words(Zwei_drei_tree *root, const char *br_word)
 
         if (strcmp(normalized_br_word, root->info1.br_word) == 0) 
 		{
+            printf("\n-------------------------------------\n");
             show_all_eng_words(root->info1.eng_words);
+            printf("-------------------------------------\n");
             printf("\n");
         }
         if (root->two_info && strcmp(normalized_br_word, root->info2.br_word) == 0) 
 		{
+            printf("\n-------------------------------------\n");
             show_all_eng_words(root->info2.eng_words);
-            printf("\n");
+            printf("-------------------------------------\n");
         }
 
         show_eng_words(root->left, br_word);
@@ -906,25 +911,21 @@ void remove_port_word(Zwei_drei_tree **root, Info info)
 {
     if (*root)
     {
-        if (strcmp(info.br_word, (*root)->info1.br_word) < 0) 
-            remove_port_word(&(*root)->left, info);
-        else if ((*root)->two_info && strcmp(info.br_word, (*root)->info1.br_word) > 0 && strcmp(info.br_word, (*root)->info2.br_word) < 0) 
-            remove_port_word(&(*root)->mid, info);
-        else if ((*root)->two_info && strcmp(info.br_word, (*root)->info2.br_word) > 0) 
-            remove_port_word(&(*root)->right, info);
-        else 
+        Zwei_drei_tree *no = search_23(*root, info.br_word);
+        
+        if(no)
         {
-            if (strcmp(info.br_word, (*root)->info1.br_word) == 0) 
+            if (is_info1(*no, info.br_word)) 
             {
-                if (remove_eng_word_bin_unit(&(*root)->info1.eng_words, (Info_bin){.eng_word = "", .unit = info.unit}) && is_binary_tree_empty((*root)->info1.eng_words)) 
+                if (remove_eng_word_bin_unit(&(*root)->info1.eng_words, (Info_bin){.eng_word = "", create_list(info.unit)}) && is_binary_tree_empty((*root)->info1.eng_words)) 
                     remove_23(root, info.br_word);
             }
-            else if ((*root)->two_info && strcmp(info.br_word, (*root)->info2.br_word) == 0) 
+            else
             {
-                if (remove_eng_word_bin_unit(&(*root)->info2.eng_words, (Info_bin){.eng_word = "", .unit = info.unit}) && is_binary_tree_empty((*root)->info2.eng_words)) 
+                if (remove_eng_word_bin_unit(&(*root)->info2.eng_words, (Info_bin){.eng_word = "", create_list(info.unit)}) && is_binary_tree_empty((*root)->info2.eng_words)) 
                     remove_23(root, info.br_word);
             }
-        }
+        }  
     }
 }
 

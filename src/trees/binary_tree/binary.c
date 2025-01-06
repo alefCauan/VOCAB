@@ -11,7 +11,7 @@ Binary_tree *allocate_binary(Info_bin info)
     }
 
     strcpy(node->info.eng_word, info.eng_word);
-    node->info.unit = info.unit;
+    node->info.units = info.units;
 
     node->left = NULL;
     node->right = NULL;
@@ -40,7 +40,7 @@ Binary_tree *search_bin(Binary_tree *root, Info_bin info)
             result = root;
         else if (strcmp(info.eng_word, root->info.eng_word) < 0) 
             result = search_bin(root->left, info);
-        else 
+        else
             result = search_bin(root->right, info);
     }
 
@@ -58,9 +58,9 @@ bool insert_bin(Binary_tree **root, Binary_tree *new)
     else if (strcmp(new->info.eng_word, (*root)->info.eng_word) > 0) 
         result = insert_bin(&(*root)->right, new);  
     else 
-        result = false;
+        insert_list(&(*root)->info.units, new->info.units->unit);
 
-    return root;  
+    return result;  
 }
 
 void register_bin(Binary_tree **root, Info_bin info)
@@ -144,7 +144,7 @@ bool remove_eng_word_bin(Binary_tree **root, Info_bin info_bin)
     }
 
     // Se o nó não for encontrado
-    if (current != NULL && info_bin.unit == current->info.unit)
+    if (current != NULL && search_list(current->info.units, info_bin.units->unit))
     {
         if (current->left == NULL && current->right == NULL)
             remove_eng_word_no_children(root, current, parent);
@@ -168,7 +168,7 @@ bool remove_eng_word_bin_unit(Binary_tree **root, Info_bin info_bin)
     bool result = true;
 
     // Procura o nó a ser removido
-    while (current != NULL && info_bin.unit != (*root)->info.unit)
+    while (current != NULL && !search_list(current->info.units, info_bin.units->unit))
     {
         parent = current;
         if (strcmp(info_bin.eng_word, current->info.eng_word) > 0)
@@ -178,7 +178,7 @@ bool remove_eng_word_bin_unit(Binary_tree **root, Info_bin info_bin)
     }
 
     // Se o nó não for encontrado
-    if (current != NULL)
+    if (current != NULL && search_list(current->info.units, info_bin.units->unit))
     {
         if (current->left == NULL && current->right == NULL)
             remove_eng_word_no_children(root, current, parent);
@@ -218,9 +218,103 @@ void show_all_eng_words(Binary_tree *root)
     if(root)
     {
         show_all_eng_words(root->left);
-        printf("  %s - unidade %d\n", root->info.eng_word, root->info.unit);
+        printf("[%s] unidades ", root->info.eng_word);
+        show_list(root->info.units);
+        printf("\n");
         show_all_eng_words(root->right);
     }
 }
 
 bool is_binary_tree_empty(Binary_tree *root) { return root == NULL; }
+
+// List
+
+Unit *allocate_list()
+{
+    Unit *no;
+    no = (Unit *) malloc(sizeof(Unit));
+    
+    if(!no)
+    {
+        printf("Erro ao alocar nó da lista");
+        exit(EXIT_FAILURE);
+    }
+
+    return no;
+}
+
+Unit *create_list(int unit)
+{
+    Unit *no;
+    no = allocate_list();
+    no->unit = unit;
+    no->next = NULL;
+    return no;
+}
+
+void deallocate_list(Unit **lista)
+{
+    if(*lista != NULL)
+    {
+        if((*lista)->next != NULL)
+            deallocate_list(&(*lista)->next);
+
+        free(*lista);
+        *lista = NULL;
+    }
+}
+
+void insert_list(Unit **lista, int unit)
+{
+    Unit *no;
+    no = create_list(unit);
+
+    no->next = (*lista);
+    (*lista) = no;
+}
+
+void show_list(Unit *lista)
+{
+    Unit *no;
+    no = lista;
+    while(no != NULL)
+    {
+        printf("-> %d ", no->unit);
+        no = no->next;
+    }
+}
+ 
+Unit *search_list(Unit *lista, int unit)
+{
+    Unit *aux;
+    aux = lista;
+    
+    while(aux != NULL && aux->unit != unit)
+        aux = aux->next;
+
+    return aux;
+}
+
+int remove_list(Unit **lista, int unit)
+{
+    int removeu = 1;
+
+    if(*lista != NULL)
+    {
+        if((*lista)->unit == unit)
+        {
+            Unit *aux;
+            aux = (*lista)->next;
+            free(*lista);
+            *lista = aux;
+        }
+        else
+            removeu = remove_list(&((*lista)->next), unit);
+    }
+    else
+        removeu = 0;
+    
+    return removeu;
+}
+
+

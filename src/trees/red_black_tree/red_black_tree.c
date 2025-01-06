@@ -292,10 +292,11 @@ void show_port_and_eng_words_rb(Red_black_tree *root, int unit)
 	{
 		if (root->info.unit == unit)
 		{
+            printf("\n-------------------------------------\n");
 			printf("PORTUGUES: %s\n", root->info.br_word);
-			printf("  Traduções em inglês:");
+			printf("- inglês: \n");
             show_all_eng_words(root->info.eng_words);
-            printf("\n");
+            printf("-------------------------------------\n");
 		}
 	
 		show_port_and_eng_words_rb(root->left, unit);
@@ -314,8 +315,9 @@ void show_eng_words_rb(Red_black_tree *root, const char *br_word)
 
         if (strcmp(normalized_br_word, root->info.br_word) == 0) 
 		{
+            printf("\n-------------------------------------\n");
             show_all_eng_words(root->info.eng_words);
-            printf("\n");
+            printf("-------------------------------------\n");
         }
 
         show_eng_words_rb(root->left, br_word);
@@ -342,7 +344,6 @@ void remove_eng_word_rb(Red_black_tree **root, Info_bin info_bin)
 		if (removed && is_binary_tree_empty((*root)->info.eng_words)) 
 			remove_rb(root, (*root)->info.br_word);
 	}
-
 }
 
 void remove_all_eng_words_rb(Red_black_tree **root, Binary_tree *eng_words)
@@ -366,10 +367,9 @@ void remove_port_word_rb(Red_black_tree **root, Info_rb info)
 			remove_port_word_rb(&(*root)->right, info);
 		else 
 		{
-			// Encontrou o nó correspondente para remoção
 			if (strcmp(info.br_word, (*root)->info.br_word) == 0) 
             {
-				if(remove_eng_word_bin_unit(&((*root)->info.eng_words), (Info_bin){.eng_word="", info.unit}) 
+				if(remove_eng_word_bin_unit(&((*root)->info.eng_words), (Info_bin){.eng_word="", create_list(info.unit)}) 
                     && is_binary_tree_empty((*root)->info.eng_words))
                     remove_rb(root, info.br_word);
             }
