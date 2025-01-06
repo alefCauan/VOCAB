@@ -70,9 +70,8 @@ bool allocate_blocks(Tree23 *root, Tree23 *original, int required_blocks) {
         }
     }
 
-    return allocation_result; // Retorna o resultado da alocação
+    return allocation_result; 
 }
-
 
 
 int main() {
