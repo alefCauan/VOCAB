@@ -45,8 +45,11 @@ bool is_leaf(Zwei_drei_tree *root)
 {
 	bool leaf = false; // não é folha
 
-	if (root->left == NULL )
-		leaf = true;
+    if(root)
+    {
+        if (root->left == NULL )
+            leaf = true;
+    }
 
 	return leaf;
 }
@@ -138,62 +141,72 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
 		*root = alloc_tree(info, NULL, NULL, NULL);
 	else
 	{
-		if (is_leaf(*root))
-		{
-			if ((*root)->two_info == false)
-				add_tree_23(root, info, b_node);
-			else // quando não tem espaço
-			{
-				Zwei_drei_tree *new;
-				new = break_node(root, info, rise, b_node);
-				if (Dad == NULL)
-				{
-					Zwei_drei_tree *node;
-					node = alloc_tree(*rise, *root, new, NULL);
-					*root = node;
-				}
-				else
-					b_node = new;
-			}
-		}
-		else
-		{ // quando não é folha
-			if (strcmp(info.br_word, (*root)->info1.br_word) < 0) 
-				b_node = insert_tree_23(*root, &((*root)->left), info, rise);
-			else if ((*root)->two_info == false || (strcmp(info.br_word, (*root)->info2.br_word) < 0))
-				b_node = insert_tree_23(*root, &((*root)->mid), info, rise);
-			else
-				b_node = insert_tree_23(*root, &((*root)->right), info, rise);
+        Binary_tree *new = allocate_binary(info.eng_words->info);
 
-			if (b_node != NULL)
-			{
-				if ((*root)->two_info == false)
-				{
-					add_tree_23(root, *rise, b_node);
-					b_node = NULL;
-				}
-				else // quando não tem espaço
-				{
-					Info rise1;
-					Zwei_drei_tree *new;
+        if(is_info1(*(*root), info.br_word))
+            insert_bin(&((*root)->info1.eng_words), new);
+        else if(is_info2(*(*root), info.br_word))
+            insert_bin(&((*root)->info2.eng_words), new);
+        else
+        {
 
-					new = break_node(root, *rise, &rise1, b_node);
+            if (is_leaf(*root))
+            {
+                if ((*root)->two_info == false)
+                    add_tree_23(root, info, b_node);
+                else 
+                {
+                    Zwei_drei_tree *new;
+                    new = break_node(root, info, rise, b_node);
+                    if (Dad == NULL)
+                    {
+                        Zwei_drei_tree *node;
+                        node = alloc_tree(*rise, *root, new, NULL);
+                        *root = node;
+                    }
+                    else
+                        b_node = new;
+                }
+            }
+            else
+            { // quando não é folha
+                if (strcmp(info.br_word, (*root)->info1.br_word) < 0) 
+                    b_node = insert_tree_23(*root, &((*root)->left), info, rise);
+                else if ((*root)->two_info == false || (strcmp(info.br_word, (*root)->info2.br_word) < 0))
+                    b_node = insert_tree_23(*root, &((*root)->mid), info, rise);
+                else
+                    b_node = insert_tree_23(*root, &((*root)->right), info, rise);
 
-					if (Dad == NULL)
-					{
-						Zwei_drei_tree *node;
-						node = alloc_tree(rise1, *root, new, NULL);
-						*root = node;
-						b_node = NULL;
-					}
-					else
-					{
-						b_node = new;
-						*rise = rise1; // Ela botou isso que nao tinha
-					}
-				}
-			}
-		}
+                if (b_node != NULL)
+                {
+                    if ((*root)->two_info == false)
+                    {
+                        add_tree_23(root, *rise, b_node);
+                        b_node = NULL;
+                    }
+                    else // quando não tem espaço
+                    {
+                        Info rise1;
+                        Zwei_drei_tree *new;
+
+                        new = break_node(root, *rise, &rise1, b_node);
+
+                        if (Dad == NULL)
+                        {
+                            Zwei_drei_tree *node;
+                            node = alloc_tree(rise1, *root, new, NULL);
+                            *root = node;
+                            b_node = NULL;
+                        }
+                        else
+                        {
+                            b_node = new;
+                            *rise = rise1; // Ela botou isso que nao tinha
+                        }
+                    }
+                }
+            }
+        }
 	}
 	return b_node;
 }
@@ -877,12 +890,12 @@ void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin)
 	{
 		bool removed = false;
 
+
 		removed = remove_eng_word_bin(&(*root)->info1.eng_words, info_bin);
 
 		if (removed && is_binary_tree_empty((*root)->info1.eng_words)) 
 			remove_23(root, (*root)->info1.br_word);
-
-		if (!removed && (*root)->two_info) 
+		else if (!removed && (*root)->two_info) 
 		{
 			removed = remove_eng_word_bin(&(*root)->info2.eng_words, info_bin);
 
@@ -890,10 +903,13 @@ void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin)
 				remove_23(root, (*root)->info2.br_word);
 		}
 
-		remove_eng_word(&(*root)->left, info_bin);
-		remove_eng_word(&(*root)->mid, info_bin);
-		remove_eng_word(&(*root)->right, info_bin);
 	}
+
+    if((*root)->left)
+        remove_eng_word(&(*root)->left, info_bin);
+    remove_eng_word(&(*root)->mid, info_bin);
+    if((*root)->two_info)
+        remove_eng_word(&(*root)->right, info_bin);
 }
 
 void remove_all_eng_words(Zwei_drei_tree **root, Binary_tree *eng_words)
@@ -915,14 +931,20 @@ void remove_port_word(Zwei_drei_tree **root, Info info)
         
         if(no)
         {
+            Info_bin info_bin = {
+                .units = create_list(info.unit)
+            };
+            strcpy(info_bin.eng_word, "");
+            
+
             if (is_info1(*no, info.br_word)) 
             {
-                if (remove_eng_word_bin_unit(&(*root)->info1.eng_words, (Info_bin){.eng_word = "", create_list(info.unit)}) && is_binary_tree_empty((*root)->info1.eng_words)) 
+                if (remove_eng_word_bin_unit(&(*root)->info1.eng_words, info_bin) && is_binary_tree_empty((*root)->info1.eng_words)) 
                     remove_23(root, info.br_word);
             }
             else
             {
-                if (remove_eng_word_bin_unit(&(*root)->info2.eng_words, (Info_bin){.eng_word = "", create_list(info.unit)}) && is_binary_tree_empty((*root)->info2.eng_words)) 
+                if (remove_eng_word_bin_unit(&(*root)->info2.eng_words, info_bin) && is_binary_tree_empty((*root)->info2.eng_words)) 
                     remove_23(root, info.br_word);
             }
         }  

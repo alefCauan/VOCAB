@@ -180,6 +180,7 @@ bool remove_eng_word_bin_unit(Binary_tree **root, Info_bin info_bin)
     // Se o nó não for encontrado
     if (current != NULL && search_list(current->info.units, info_bin.units->unit))
     {
+
         if (current->left == NULL && current->right == NULL)
             remove_eng_word_no_children(root, current, parent);
         else if (current->left != NULL && current->right != NULL)

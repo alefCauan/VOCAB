@@ -134,7 +134,4 @@ unidade. Caso ela seja a única palavra na árvore binária, a palavra em portug
 void remove_port_word(Zwei_drei_tree **root, Info info);
 
 
-int remover_portugues_unit_aux(Binary_tree **root, int unit);
-
-int remover_portugues_unit(Zwei_drei_tree **root, char *palavra_portugues, int unit);
 #endif

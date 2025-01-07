@@ -38,7 +38,7 @@ Red_black_tree *search_rb_path(Red_black_tree *root, char *info, int level)
 
 double get_time_micro(clock_t start, clock_t end)
 {
-    return ((double)(end - start)) / CLOCKS_PER_SEC / 30; // Convertendo para microsegundos
+    return (((double)(end - start)) / CLOCKS_PER_SEC / 30) * 1000000; ; 
 }
 
 int main()

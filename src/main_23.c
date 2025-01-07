@@ -44,7 +44,7 @@ int main()
                 Info_bin info_bin;
                 printf("Informe a palavra em inglês: ");
                 setbuf(stdin, NULL);
-                scanf("%s", info_bin.eng_word);
+                scanf("%[^\n]", info_bin.eng_word);
                 printf("Informe a unidade: ");
                 scanf("%d", &unit);
                 info_bin.units = create_list(unit);
@@ -56,7 +56,7 @@ int main()
                 Info info;
                 printf("Informe a palavra em português: ");
                 setbuf(stdin, NULL);
-                scanf("%s", info.br_word);
+                scanf("%[^\n]", info.br_word);
                 trim_string(info.br_word);
                 printf("Informe a unidade: ");
                 scanf("%d", &info.unit);

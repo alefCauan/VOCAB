@@ -68,19 +68,6 @@ void insert_vocabulary(Zwei_drei_tree **root, char *translation, char *english_w
     strcpy(info.br_word, translation);
 
     Info rise;
-
-    Zwei_drei_tree *no = search_23(*root, translation);
-
-    if(!no)
-        insert_tree_23(NULL, root, info, &rise);
-    else
-    {
-        Binary_tree *new = allocate_binary(bin);
-        if(is_info1(*no, translation))
-            insert_bin(&(no->info1.eng_words), new);
-        else
-            insert_bin(&(no->info2.eng_words), new);
-    }
-
+    insert_tree_23(NULL, root, info, &rise);
 }
 
