@@ -115,13 +115,11 @@ Zwei_drei_tree *break_node(Zwei_drei_tree **root, Info info, Info *rise, Zwei_dr
     } 
     else if (strcmp(info.br_word, (*root)->info2.br_word) < 0) 
 	{
-        // Novo valor está node meio, `info` deve subir
         *rise = info;
         new_node = alloc_tree((*root)->info2, b_node, (*root)->right, NULL);
     } 
     else 
 	{
-        // Novo valor é o bigger_node, `info2` deve subir, `info` vai para o novo nó
         *rise = (*root)->info2;
         new_node = alloc_tree(info, (*root)->right, b_node, NULL);
     }
@@ -158,6 +156,7 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
                 {
                     Zwei_drei_tree *new;
                     new = break_node(root, info, rise, b_node);
+                    
                     if (Dad == NULL)
                     {
                         Zwei_drei_tree *node;
@@ -201,7 +200,7 @@ Zwei_drei_tree *insert_tree_23(Zwei_drei_tree *Dad, Zwei_drei_tree **root, Info 
                         else
                         {
                             b_node = new;
-                            *rise = rise1; // Ela botou isso que nao tinha
+                            *rise = rise1; 
                         }
                     }
                 }
@@ -903,13 +902,10 @@ void remove_eng_word(Zwei_drei_tree **root, Info_bin info_bin)
 				remove_23(root, (*root)->info2.br_word);
 		}
 
-	}
-
-    if((*root)->left)
         remove_eng_word(&(*root)->left, info_bin);
-    remove_eng_word(&(*root)->mid, info_bin);
-    if((*root)->two_info)
+        remove_eng_word(&(*root)->mid, info_bin);
         remove_eng_word(&(*root)->right, info_bin);
+	}
 }
 
 void remove_all_eng_words(Zwei_drei_tree **root, Binary_tree *eng_words)
